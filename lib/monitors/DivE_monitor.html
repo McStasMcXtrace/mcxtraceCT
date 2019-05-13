@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: DivE_monitor Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>DivE_monitor</CODE> Component</H1>
+
+Based on neutron component by Kristian Nielsen
+Divergence/wavelength monitor.
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> Erik B Knudsen</B>
+  <LI> <B>Origin:</B> Dtu Physics</B>
+  <LI> <B>Date:</B> Jun. 2016</B>
+  <LI> <B>Version:</B> $Revision$</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+2D detector for intensity as a function of both horizontal divergence
+and Energy.
+
+Example: DivE_monitor(nE=20, nh=20, filename="Output.div",
+          xmin=-0.1, xmax=0.1, ymin=-0.1, ymax=0.1,
+          maxdiv_h=2, Emin=2, Emax=10)
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>nE</TD>
+     <TD>1</TD>
+     <TD>Number of bins in energy </TD>
+<TD ALIGN=RIGHT>20</TD> </TR>
+<TR> <TD>nh</TD>
+     <TD>1</TD>
+     <TD>Number of bins in divergence </TD>
+<TD ALIGN=RIGHT>20</TD> </TR>
+<TR> <TD>filename</TD>
+     <TD>string</TD>
+     <TD>Name of file in which to store the detector image </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>xmin</TD>
+     <TD>m</TD>
+     <TD>Lower x bound of detector opening </TD>
+<TD ALIGN=RIGHT>-0.05</TD> </TR>
+<TR> <TD>xmax</TD>
+     <TD>m</TD>
+     <TD>Upper x bound of detector opening </TD>
+<TD ALIGN=RIGHT>0.05</TD> </TR>
+<TR> <TD>ymin</TD>
+     <TD>m</TD>
+     <TD>Lower y bound of detector opening </TD>
+<TD ALIGN=RIGHT>-0.05</TD> </TR>
+<TR> <TD>ymax</TD>
+     <TD>m</TD>
+     <TD>Upper y bound of detector opening </TD>
+<TD ALIGN=RIGHT>0.05</TD> </TR>
+<TR> <TD>xwidth</TD>
+     <TD>m</TD>
+     <TD>Width of detector. Overrides xmin,xmax. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>Height of detector. Overrides ymin,ymax. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>maxdiv_h</TD>
+     <TD>degrees</TD>
+     <TD>Maximal horizontal divergence detected </TD>
+<TD ALIGN=RIGHT>2</TD> </TR>
+<TR> <TD><B>Emin</B></TD>
+     <TD>keV</TD>
+     <TD>Minimum energy detected </TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>Emax</B></TD>
+     <TD>keV</TD>
+     <TD>Maximum energy detected </TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD>restore_xray</TD>
+     <TD>1</TD>
+     <TD>If set, the monitor does not influence the photon state </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>nx</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>ny</TD>
+     <TD>1</TD>
+     <TD>Vector definition of "forward" direction wrt. divergence, to be used e.g. when the monitor is rotated into the horizontal plane.</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>nz</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=opar></A>Output parameters</H2>
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD><B>Div_N</B></TD>
+     <TD>-</TD>
+     <TD>Array of photon ray counts</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>Div_p</B></TD>
+     <TD>-</TD>
+     <TD>Array of photon weight counts</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>Div_p2</B></TD>
+     <TD>-</TD>
+     <TD>Array of second moments</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="DivE_monitor.comp">Source code</A> for <CODE>DivE_monitor.comp</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: SAXS_saxlab Instrument at </TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>SAXS_saxlab</CODE> Instrument</H1>
+
+Written by : Erik Knudsen ( erkn@fysik.dtu.dk ) & Jana Baltser ( jana.baltser@fys.ku.dk )
+Date : Apr 2017
+Origin : NBI
+Release : 1.4
+Version : 1.0
+Description
+The small-angle scattering (SAXS) instrument generally consists of the following parts:
+the X-ray source ( the system includes rotating copper anode and KB multilayermirrors), 
+a pinhole collimation system and a detector.
+The geometry of this instument is such that an x-ray source (turned 45 deg.) shines light
+on Montel mirror pair. The mirror pair is mounted such that the doubly reflected radiation
+is deflected downwards (negative y-axis). This means the the mirror join is pointing upwards, and th
+mirrors themselves extending +-45 degrees downwards.
+There are slits attached to the mirror exits
+This arrangement is designed to closesly resemble the SAXSlab system installed at
+NBI (University of Copenhagen)
+The evolution of the beam is tracked using a series of 2D PSD monitors situated along the beam axis,
+which points slightly down.
+In real life the beam axis is parallel to the ground and the source is shining slightly upwards.
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Site:   </B>
+  <LI> <B>Author:</B>(Unknown)</B>
+  <LI> <B>Origin:</B>(Unknown)</B>
+  <LI> <B>Date:</B>(Unknown)</B>
+  <LI> <B>Version:</B>(Unknown)</B>
+</UL>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>Gamma</TD>
+     <TD>deg</TD>
+     <TD>Nominal mirror glancing  angle
+</TD>
+<TD ALIGN=RIGHT>1.2 </TD> </TR>
+<TR> <TD>GammaP</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0 </TD> </TR>
+<TR> <TD>S1</TD>
+     <TD>m</TD>
+     <TD>Distance from the source to the multilayer’s surface
+</TD>
+<TD ALIGN=RIGHT>.045</TD> </TR>
+<TR> <TD>S2</TD>
+     <TD>m</TD>
+     <TD>Focal distance of the multilayer
+</TD>
+<TD ALIGN=RIGHT>.9</TD> </TR>
+<TR> <TD>Energy</TD>
+     <TD>keV</TD>
+     <TD>Primary energy of the photon beam
+</TD>
+<TD ALIGN=RIGHT>8.05</TD> </TR>
+<TR> <TD>mirrorin</TD>
+     <TD> </TD>
+     <TD>Flag controlling whether or not the mirror is active.
+</TD>
+<TD ALIGN=RIGHT>3</TD> </TR>
+<TR> <TD>pin1</TD>
+     <TD> </TD>
+     <TD>Flag controlling whther the 1st pinhole is active.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>pin2</TD>
+     <TD> </TD>
+     <TD>Flag controlling whther the 2nd pinhole is active.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>pin3</TD>
+     <TD> </TD>
+     <TD>Flag controlling whther the 3rd pinhole is active.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>Lpsd1</TD>
+     <TD>m</TD>
+     <TD>Distance from mirror centre to 1st diagnostic PSD.
+</TD>
+<TD ALIGN=RIGHT>0.160</TD> </TR>
+<TR> <TD>Lpsd2</TD>
+     <TD>m</TD>
+     <TD>Distance from vacumm chamber entry to 2nd diagnostic PSD.
+</TD>
+<TD ALIGN=RIGHT>0.15</TD> </TR>
+<TR> <TD>Lpsd3</TD>
+     <TD>m</TD>
+     <TD>Distance from vacumm chamber entry to 3rd diagnostic PSD.
+</TD>
+<TD ALIGN=RIGHT>1.2</TD> </TR>
+<TR> <TD>detPos</TD>
+     <TD>m</TD>
+     <TD>Distance from vacuum chamber entry to Detector.
+</TD>
+<TD ALIGN=RIGHT>1.41</TD> </TR>
+<TR> <TD>detOffset</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>3e-2</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="SAXS_saxlab.instr">Source code</A> for <CODE>SAXS_saxlab.instr</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

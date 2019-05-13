@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: ESRF_ID11 Instrument at  ESRF</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>ESRF_ID11</CODE> Instrument</H1>
+
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Site:    ESRF</B>
+  <LI> <B>Author:</B> E. Knudsen (erkn@risoe.dtu.dk)</B>
+  <LI> <B>Origin:</B> Ris&oslash; DTU</B>
+  <LI> <B>Date:</B> Nov. 26th, 2009</B>
+  <LI> <B>Version:</B> $Revision$</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+Model of the ESRF ID11 Transfocator based beamline.
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>ANGLE</TD>
+     <TD>deg</TD>
+     <TD>Rotation (misalignment) of first transfocator 
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>SOURCE</TD>
+     <TD> </TD>
+     <TD>1) Choose rectangular source with defined divergence. 2) Choose Gaussian cross-section source
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>T1_N</TD>
+     <TD> </TD>
+     <TD>Number of Be lenses in 1st IVT transfocator @31.5m
+</TD>
+<TD ALIGN=RIGHT>16</TD> </TR>
+<TR> <TD>T2_N</TD>
+     <TD> </TD>
+     <TD>Number of Al lenses in 1st IVT transfocator @31.5m _currently deactivated by default_
+</TD>
+<TD ALIGN=RIGHT>16</TD> </TR>
+<TR> <TD>T3_N</TD>
+     <TD> </TD>
+     <TD>Number of Al lenses in 2nd IVT transfocator @92.25 m
+</TD>
+<TD ALIGN=RIGHT>16</TD> </TR>
+<TR> <TD>SI_N</TD>
+     <TD> </TD>
+     <TD>Number of Si lenses in Si microfocus chip transfocator @94 m
+</TD>
+<TD ALIGN=RIGHT>2</TD> </TR>
+<TR> <TD>IVT1BE</TD>
+     <TD> </TD>
+     <TD>If nonzero the set of Be-lenses is chosen for the IVT @31.5m. If 0 the Al set is active.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="ESRF_ID11.instr">Source code</A> for <CODE>ESRF_ID11.instr</CODE>.
+  <LI> http://www.esrf.eu/UsersAndScience/Experiments/StructMaterials/ID11/ID11Source
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

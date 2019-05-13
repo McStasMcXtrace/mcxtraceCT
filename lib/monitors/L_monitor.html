@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: L_monitor Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>L_monitor</CODE> Component</H1>
+
+Modified for X-ray use by Erik Knudsen
+Wavelength-sensitive monitor.
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> Kristian Nielsen and Kim Lefmann</B>
+  <LI> <B>Origin:</B> Risoe</B>
+  <LI> <B>Date:</B> June 22, 2009</B>
+  <LI> <B>Version:</B> $Revision$</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+A square single monitor that measures the wavelength of the incoming
+xray.
+
+Example: L_monitor(xmin=-0.1, xmax=0.1, ymin=-0.1, ymax=0.1,
+          nL=20, filename="Output.L", Lmin=0.1, Lmax=1)
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>nL</TD>
+     <TD>1</TD>
+     <TD>Number of wavelength channels </TD>
+<TD ALIGN=RIGHT>20</TD> </TR>
+<TR> <TD>filename</TD>
+     <TD>text</TD>
+     <TD>Name of file in which to store the detector image </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>xmin</TD>
+     <TD>m</TD>
+     <TD>Lower x bound of detector opening </TD>
+<TD ALIGN=RIGHT>-0.05</TD> </TR>
+<TR> <TD>xmax</TD>
+     <TD>m</TD>
+     <TD>Upper x bound of detector opening </TD>
+<TD ALIGN=RIGHT>0.05</TD> </TR>
+<TR> <TD>ymin</TD>
+     <TD>m</TD>
+     <TD>Lower y bound of detector opening </TD>
+<TD ALIGN=RIGHT>-0.05</TD> </TR>
+<TR> <TD>ymax</TD>
+     <TD>m</TD>
+     <TD>Upper y bound of detector opening </TD>
+<TD ALIGN=RIGHT>0.05</TD> </TR>
+<TR> <TD>xwidth</TD>
+     <TD>m</TD>
+     <TD>Width of detector. Overrides xmin,xmax. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>Height of detector. Overrides ymin,ymax. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD><B>Lmin</B></TD>
+     <TD>AA</TD>
+     <TD>Minimum wavelength to detect </TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>Lmax</B></TD>
+     <TD>AA</TD>
+     <TD>Maximum wavelength to detect </TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD>restore_xray</TD>
+     <TD>1</TD>
+     <TD>If set, the monitor does not influence the x-ray state </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=opar></A>Output parameters</H2>
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD><B>L_N</B></TD>
+     <TD>-</TD>
+     <TD>Array of xray counts</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>L_p</B></TD>
+     <TD>-</TD>
+     <TD>Array of xray weight counts</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>L_p2</B></TD>
+     <TD>-</TD>
+     <TD>Array of second moments</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="L_monitor.comp">Source code</A> for <CODE>L_monitor.comp</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

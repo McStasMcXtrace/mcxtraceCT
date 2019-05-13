@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: MAXII_711 Instrument at  MAXII</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>MAXII_711</CODE> Instrument</H1>
+
+Powder diffraction beamline
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Site:    MAXII</B>
+  <LI> <B>Author:</B> Erik B Knudsen (erkn@fysik.dtu.dk)</B>
+  <LI> <B>Origin:</B> DTU Physics</B>
+  <LI> <B>Date:</B> Sep 2013</B>
+  <LI> <B>Version:</B> 1.0</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+A simple beamline setup consisting of a single focusing mirror,
+a monochromator, and a four-circle goniometer at the sample stage.
+The beamline is et to work best at 
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>R</TD>
+     <TD>m</TD>
+     <TD>Radius of curvature of the focusing mirror. N.b. a negative curvature simply means the mirror curves towards negative x
+</TD>
+<TD ALIGN=RIGHT>-100</TD> </TR>
+<TR> <TD>phi_mirror</TD>
+     <TD>m</TD>
+     <TD>Set angle of incidence of the focusing mirror
+</TD>
+<TD ALIGN=RIGHT>3</TD> </TR>
+<TR> <TD>phi_mono</TD>
+     <TD>deg</TD>
+     <TD>Set angle of incidence of Monochromator crystal.
+</TD>
+<TD ALIGN=RIGHT>9.25</TD> </TR>
+<TR> <TD>chi</TD>
+     <TD>deg</TD>
+     <TD>2nd rotation of four circle, around X.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>ome</TD>
+     <TD>deg</TD>
+     <TD>1st rotation of four circle, around Y.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>phi</TD>
+     <TD>deg</TD>
+     <TD>3rd rotation of four circle, around Y'.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>tth</TD>
+     <TD>deg</TD>
+     <TD>4th rotation of four circle, i.e. detector arm. Around Y.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="MAXII_711.instr">Source code</A> for <CODE>MAXII_711.instr</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

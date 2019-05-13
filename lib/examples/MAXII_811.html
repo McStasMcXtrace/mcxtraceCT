@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: MAXII_811 Instrument at  MAXII</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>MAXII_811</CODE> Instrument</H1>
+
+XAFS and surface diffraction, Materials Science Beamline 811 at MAX-lab.
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Site:    MAXII</B>
+  <LI> <B>Author:</B> Erik B Knudsen (erkn@fysik.dtu.dk)</B>
+  <LI> <B>Origin:</B> Your institution</B>
+  <LI> <B>Date:</B> Jan 23, 2011</B>
+  <LI> <B>Version:</B> 1.0</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+Fed by a wiggler, this beamline operates in monochromatic mode with an
+operational energy tunable between 2.3 – 20 keV (0.6 - 5.3 Å).
+The wavelength is chosen by a double monochromator crystal setup where either
+Si 111 or Si 311 may be chosen. Furthermore a double mirror
+setup may be used to to focus the beam onto a sample. The rotation of the
+first mirror defines the position of the second which is computed automatically.
+If mirrors are in the monochromators are automatically reposistioned to
+accomadate the deflected beam. 
+
+Example: mxrun Max2_811.instr M1=1 M2=1 M1_pitch=1 M2_pitch=1 theta=14.221
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>Emin</TD>
+     <TD>keV</TD>
+     <TD>energy range of radiation emitted from wiggler. 
+</TD>
+<TD ALIGN=RIGHT>1e-3</TD> </TR>
+<TR> <TD>Emax</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>12</TD> </TR>
+<TR> <TD>prim_h</TD>
+     <TD>m</TD>
+     <TD>horizaontal and vertical opening of primary slits.
+</TD>
+<TD ALIGN=RIGHT>.40e-3</TD> </TR>
+<TR> <TD>prim_v</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0.6e-3</TD> </TR>
+<TR> <TD>xafs_h</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>3e-3</TD> </TR>
+<TR> <TD>xafs_v</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>3e-3</TD> </TR>
+<TR> <TD>M1</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>M1_R</TD>
+     <TD>m</TD>
+     <TD>Radius of curvature of mirror 1.
+</TD>
+<TD ALIGN=RIGHT>2000</TD> </TR>
+<TR> <TD>M1_pitch</TD>
+     <TD>deg</TD>
+     <TD>Central glancing angle of mirror 1.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>M2</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>M2_R</TD>
+     <TD>m</TD>
+     <TD>Radius of curvature of mirror 2.
+</TD>
+<TD ALIGN=RIGHT>800</TD> </TR>
+<TR> <TD>M2_pitch</TD>
+     <TD>deg</TD>
+     <TD>Central glancing angle of mirror 2.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>theta</TD>
+     <TD>deg</TD>
+     <TD>Scattering angle of monochromators
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>TTH</TD>
+     <TD>deg</TD>
+     <TD>angle at which to put the surface diffraction detector
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>ATT1</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>ATT2</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>ATT3</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>XAFS</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="MAXII_811.instr">Source code</A> for <CODE>MAXII_811.instr</CODE>.
+  <LI> A reference/HTML link for more information
+http://www.maxlab.lu.se/beamlines/bli811/
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

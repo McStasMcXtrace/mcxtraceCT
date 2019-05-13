@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Molecule_2state Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Molecule_2state</CODE> Component</H1>
+
+Disordered optical-excitable molecule sample.
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> Erik B Knudsen</B>
+  <LI> <B>Origin:</B> DTU Physics</B>
+  <LI> <B>Date:</B> October 2012</B>
+  <LI> <B>Version:</B> 1.0</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+A sample model for pump probe experiments which models disordered molecules in a volume (rectangular,
+cylindrical, or spherical). Molecules can be in one of two states (0 and 1).
+Scattering is either specified through F vs. q scattering curves or as a set of atom positions from which
+F vs. q is computed.
+At t=-delta_t, a fraction of the molecules are put in state 1, from which they decay exponentially,
+with time constant t_relax, into state 0. For t<-delta_t
+all of the molecules are in the state specified by <i>initial_state</i>.
+To improve statistics, scattering may be limited to a "forward" cone with opening angle in [psimin, psimax].
+Furthermore, scattering may be restricted to the azimuthal segment between [etamin,etamax].
+
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>form_factors</TD>
+     <TD> </TD>
+     <TD>File from which to read atomic form factors. Defualt amounts to use the one shipped with McXtrace.
+</TD>
+<TD ALIGN=RIGHT>"FormFactors.txt"</TD> </TR>
+<TR> <TD>state_0_file</TD>
+     <TD> </TD>
+     <TD>Isotropic scattering factors (parameterized by q), or atom positions are specified for state 0.
+</TD>
+<TD ALIGN=RIGHT>NULL</TD> </TR>
+<TR> <TD>state_1_file</TD>
+     <TD> </TD>
+     <TD>Isotropic scattering factors (parameterized by q), or atom positions are specified for state 1.
+</TD>
+<TD ALIGN=RIGHT>NULL</TD> </TR>
+<TR> <TD>nq</TD>
+     <TD> </TD>
+     <TD>Number of q-bins if F is to be computed from atom positions (Debye formalism).
+</TD>
+<TD ALIGN=RIGHT>512</TD> </TR>
+<TR> <TD>material_datafile</TD>
+     <TD> </TD>
+     <TD>Where to read f1 and f2 factors from in order to handle absorption.
+</TD>
+<TD ALIGN=RIGHT>"Be.txt"</TD> </TR>
+<TR> <TD>delta_t</TD>
+     <TD>s</TD>
+     <TD>Delay between the exciting event t=0. delay is negative, i.e. delta_t>0 means the exciting event happens before t=0.
+</TD>
+<TD ALIGN=RIGHT>100e-9</TD> </TR>
+<TR> <TD>excitation_yield</TD>
+     <TD> </TD>
+     <TD>Mean fraction of molecules that get excited.
+</TD>
+<TD ALIGN=RIGHT>0.2</TD> </TR>
+<TR> <TD>t_relax</TD>
+     <TD>s</TD>
+     <TD>Mean relaxation time (into state 0) of excited molecules.
+</TD>
+<TD ALIGN=RIGHT>100e-9</TD> </TR>
+<TR> <TD>initial_state</TD>
+     <TD> </TD>
+     <TD>Which state is Molecule_2state in for t<delta_t? Useful for modelling something that changes state slowly.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>psimin</TD>
+     <TD>rad</TD>
+     <TD>Minimum scattering angle off the optical axis.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>psimax</TD>
+     <TD>rad</TD>
+     <TD>Maximum scattering angle off the optical axis.
+</TD>
+<TD ALIGN=RIGHT>M_PI_2</TD> </TR>
+<TR> <TD>etamin</TD>
+     <TD>rad</TD>
+     <TD>Minimum scattering angle around the optical axis.
+</TD>
+<TD ALIGN=RIGHT>-M_PI</TD> </TR>
+<TR> <TD>etamax</TD>
+     <TD>rad</TD>
+     <TD>Maximum scattering angle around the optical axis.
+</TD>
+<TD ALIGN=RIGHT>M_PI</TD> </TR>
+<TR> <TD>radius</TD>
+     <TD>m</TD>
+     <TD>Radius of cylindrical of spherical sample.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>Height of rectangular or cylindrical sample.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>xwidth</TD>
+     <TD>m</TD>
+     <TD>Width of rectangular sample.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>zdepth</TD>
+     <TD>m</TD>
+     <TD>Depth (thickness) of rectangular sample.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>concentration</TD>
+     <TD>m</TD>
+     <TD>Concentration or packing factor of sample.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>p_transmit</TD>
+     <TD>m</TD>
+     <TD>Fraction of statistics devoted to sample direct (unscattered) beam.
+</TD>
+<TD ALIGN=RIGHT>0.1</TD> </TR>
+<TR> <TD>q_parametric</TD>
+     <TD> </TD>
+     <TD>0: Assume that datafiles contains atom positions. 1: datafiles contains F vs. q data.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>Emax</TD>
+     <TD> </TD>
+     <TD>Maximal energy for which scattering factors are computed. Must be larger than the maximal impinging energy.
+</TD>
+<TD ALIGN=RIGHT>80</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=opar></A>Output parameters</H2>
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD><B>delta_q</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>prms</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>shape</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Molecule_2state.comp">Source code</A> for <CODE>Molecule_2state.comp</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

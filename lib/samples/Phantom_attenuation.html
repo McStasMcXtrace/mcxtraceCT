@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Phantom_attenuation Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Phantom_attenuation</CODE> Component</H1>
+
+Sample composed of multiple materials
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> Matteo Busi, Jeppe R Frisvad, Erik B Knudsen</B>
+  <LI> <B>Origin:</B> DTU Physics</B>
+  <LI> <B>Date:</B> March 2017</B>
+  <LI> <B>Version:</B> 1.0</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+This component is to simulate samples consisting of multiple materials (E.g. luggage, body parts, etc. ).
+The object is defined by an input 2D or 3D array, in which each cell label a different material. 
+Example of a 5x5 (size=5) object_file.dat:
+	1 0 1 1 0
+ 2 1 0 0 1
+ 2 3 3 3 3
+	1 2 1 0 1
+	0 0 0 2 1 
+With 0 being empty, 1 mapping into "1.dat", 2 mapping into "2.dat", which are tables containing the parameters in the headers
+and the cross sections.
+Moreover, a corresponding can be provided to include scattering such as "... _scatt.dat". That is the CDF(Cumulative density function) of scattering function (diffraction
+pattern ) parametrized as sin(theta)/lambda.
+Always make sure the orientation is what you expect. Otherwise rotate the sample component about (0, omega, 0).
+
+Example: 1.dat
+  # rho 2.6941 (g cm^-3)
+  # E(keV)	Rayleigh(cm^2 g^-1)	Compton(cm^2 g^-1)	Photo(cm^2 g^-1)
+  2.0000000e+00   1.8380000e+00   3.3750000e-02   2.2610000e+03
+  
+Example: 1_scatt.dat
+  # probability_density(p/1)  sin(theta)/lambda
+	 7.7383064e-04   7.3613105e-02
+	 ...	...
+  1.0000000e+00   4.5558497e-01
+
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>object_file</TD>
+     <TD>".dat"</TD>
+     <TD>File that contains the object information.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>dimension</TD>
+     <TD>2,3</TD>
+     <TD>Specify dimension of the object array, can be 2 or 3D.
+</TD>
+<TD ALIGN=RIGHT>2</TD> </TR>
+<TR> <TD>voxel_size</TD>
+     <TD>m</TD>
+     <TD>That's the width in meters of the cells defined by the object.
+</TD>
+<TD ALIGN=RIGHT>1e-3</TD> </TR>
+<TR> <TD>step_length</TD>
+     <TD>m</TD>
+     <TD>That's the propagation length within the phantom of each step while looping.
+</TD>
+<TD ALIGN=RIGHT>5e-4</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>Vertical height of the phantom.
+</TD>
+<TD ALIGN=RIGHT>1e-3*100</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Phantom_attenuation.comp">Source code</A> for <CODE>Phantom_attenuation.comp</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

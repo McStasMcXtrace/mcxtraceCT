@@ -1,0 +1,324 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: PowderN Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>PowderN</CODE> Component</H1>
+
+Modified for X-ray use: EK, 28.10.10
+General powder sample (N lines, single scattering, incoherent scattering)
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> P. Willendrup, L. Chapon, K. Lefmann, A.B.Abrahamsen, N.B.Christensen, E.M.Lauridsen.</B>
+  <LI> <B>Origin:</B> McStas release</B>
+  <LI> <B>Date:</B> 4.2.98</B>
+  <LI> <B>Version:</B> $Revision$</B>
+  <LI> <B>Modification history:</B> <UL>
+    <LI>  KL, KN 20.03.98   (rewrite)
+    <LI>  KL,    28.09.01   (two lines)
+    <LI>  KL,    22.05.03   (background)
+    <LI>  KL, PW 01.05.05   (N lines)
+    <LI>  PW, LC 04.10.05   (Merge with Chapon Powder_multi)
+    <LI>  PW, KL 05.06.07   (Concentricity)
+    <LI>  EF,    17.10.08   (added any shape sample geometry)
+  </UL>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+General powder sample with
+        many scattering vectors
+        possibility for intrinsic line broadening
+        incoherent background ratio is computed from material datafile.
+        No multiple scattering. No secondary extinction.
+
+Based on Powder1/Powder2/Single_crystal.
+Geometry is a powder filled cylinder, sphere, box or any shape from an OFF file.
+Incoherent scattering is only provided here to account for a background.
+The efficient is highly improved when restricting the vertical scattering
+  range on the Debye-Scherrer cone (with 'd_phi' and 'focus_flip').
+The unit cell volume Vc may also be computed when giving the density,
+  the atomic/molecular weight and the number of atoms per unit cell.
+
+<b>Sample shape:</b>
+Sample shape may be a cylinder, a sphere, a box or any other shape.
+  box/plate:       xwidth x yheight x zdepth (thickness=0)
+  hollow box/plate:xwidth x yheight x zdepth and thickness>0
+  cylinder:        radius x yheight (thickness=0)
+  hollow cylinder: radius x yheight and thickness>0
+  sphere:          radius (yheight=0 thickness=0)
+  hollow sphere:   radius and thickness>0 (yheight=0)
+  any shape:       geometry=OFF_file
+
+  The complex geometry option handles any closed non-convex polyhedra.
+  It computes the intersection points of the xray with the object
+  transparently, so that it can be used like a regular sample object.
+  It supports the OFF and NOFF file format but not COFF (colored faces).
+  Such files may be generated from XYZ data using:
+    qhull < coordinates.xyz Qx Qv Tv o > geomview.off
+  or
+    powercrust coordinates.xyz
+  and viewed with geomview or java -jar jroff.jar (see below).
+  The default size of the object depends of the OFF file data, but its
+  bounding box may be resized using xwidth,yheight and zdepth.
+
+If you use this component and produce valuable scientific results, please
+cite authors with references bellow (in <a href="#links">Links</a>).
+
+Example: PowderN(reflections = "c60.lau", d_phi = 15 , radius = 0.01,
+  yheight = 0.05, Vc = 1076.89, Delta_d=0, DW=1,
+  format=Crystallographica)
+
+<b>Powder definition file format</b>
+Powder structure is specified with an ascii data file 'reflections'.
+The powder data are free-text column based files.
+The reflection list should be ordered by decreasing d-spacing values.
+      ... d ... F2
+Lines begining by '#' are read as comments (ignored) but they may contain
+the following keywords (in the header):
+  #Vc           <value of unit cell volume Vc [Angs^3]>
+  #Debye_Waller <value of Debye-Waller factor DW>
+  #Delta_d/d    <value of Detla_d/d width for all lines>
+These values are not read if entered as component parameters (Vc=...)
+
+The signification of the columns in the numerical block may be
+set using the 'format' parameter. Built-in formats are:
+  format=Crystallographica
+  format=Fullprof
+  format=Lazy
+and these specifications it is important NOT to use quotes, as shown.
+
+An other possibility to define other formats is to set directly
+the signification of the columns as a vector of indexes in the order
+  format={j,d,F2,DW,Delta_d/d,1/2d,q,F}
+Signification of the symbols is given below. Indexes start at 1.
+Indices with zero means that the column are not present, so that:
+  Crystallographica={ 4,5,7,0,0,0,0,0 }
+  Fullprof         ={ 4,0,8,0,0,5,0,0 }
+  Lazy             ={17,6,0,0,0,0,0,13}
+Here again, NO quotes should be around the 'format' value.
+
+At last, the format may be overridden by direct definition of the
+column indexes in the file itself by using the following keywords
+in the header (e.g. '#column_j 4'):
+  #column_j     <index of the multiplicity 'j' column>
+  #column_d     <index of the d-spacing 'd' column [Angs]>
+  #column_F2    <index of the squared str. factor '|F|^2' column [b]>
+  #column_F     <index of the structure factor norm '|F|' column>
+  #column_DW    <index of the Debye-Waller factor 'DW' column>
+  #column_Dd    <index of the relative line width Delta_d/d 'Dd' column>
+  #column_inv2d <index of the 1/2d=sin(theta)/lambda 'inv2d' column>
+  #column_q     <index of the scattering wavevector 'q' column [Angs-1]>
+
+<b>Concentricity</b>
+
+PowderN assumes 'concentric' shape, i.e. can contain other components inside its
+optional inner hollow. Example, Sample in Al cryostat:
+
+
+COMPONENT Cryo = PowderN(reflections="Al.laz", radius = 0.01, thickness = 0.001,
+                         concentric = 1, p_interact=0.1)
+AT (0,0,0) RELATIVE Somewhere
+
+COMPONENT Sample = some_other_component(with geometry FULLY enclosed in the hollow)
+AT (0,0,0) RELATIVE Somewhere
+
+COMPONENT Cryo2 = COPY(Cryo)(concentric = 0)
+AT (0,0,0) RELATIVE Somewhere
+
+
+(The second instance of the cryostat component can also be written out completely
+ using PowderN(...). In both cases, this second instance needs concentric = 0.)
+The concentric arrangment can not be used with OFF geometry specification.
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>format</TD>
+     <TD> </TD>
+     <TD>Name of the format, or list of column indexes (see Description). N.b. no qoutes!
+</TD>
+<TD ALIGN=RIGHT>Undefined</TD> </TR>
+<TR> <TD>mat_format</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>mat_Undefined</TD> </TR>
+<TR> <TD>reflections</TD>
+     <TD>string</TD>
+     <TD>Input file for reflections.
+Use only incoherent scattering if NULL or "" </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>material</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>geometry</TD>
+     <TD>str</TD>
+     <TD>Name of an Object File Format (OFF) or PLY file for complex geometry. The OFF/PLY file may be generated from XYZ coordinates using qhull/powercrust.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>radius</TD>
+     <TD>m</TD>
+     <TD>Outer radius of sample in (x,z) plane </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>Height of sample y direction </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>xwidth</TD>
+     <TD>m</TD>
+     <TD>Horiz. dimension of sample, as a width </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>zdepth</TD>
+     <TD>m</TD>
+     <TD>Depth of box sample </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>thickness</TD>
+     <TD>m</TD>
+     <TD>Thickness of hollow sample.
+Negative value extends the hollow volume outside of the box/cylinder. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>pack</TD>
+     <TD>1</TD>
+     <TD>Packing factor
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>Vc</TD>
+     <TD>AA^3</TD>
+     <TD>Volume of unit cell=nb atoms per cell/density of atoms.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>Delta_d</TD>
+     <TD>AA</TD>
+     <TD>Global relative Delta_d/d spreading when the 'w' column is not available. Use 0 if ideal.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>p_inc</TD>
+     <TD>1</TD>
+     <TD>Fraction of incoherently scattered rays.
+</TD>
+<TD ALIGN=RIGHT>0.1</TD> </TR>
+<TR> <TD>p_transmit</TD>
+     <TD>1</TD>
+     <TD>Fraction of transmitted (only attenuated) rays.
+</TD>
+<TD ALIGN=RIGHT>0.1</TD> </TR>
+<TR> <TD>DW</TD>
+     <TD>1</TD>
+     <TD>Global Debye-Waller factor when the 'DW' column is not available. Use 1 if included in F2.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>nb_atoms</TD>
+     <TD>1</TD>
+     <TD>Number of sub-unit per unit cell, that is ratio of sigma for chemical formula to sigma per unit cell.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>d_phi</TD>
+     <TD>deg</TD>
+     <TD>Angle corresponding to the vertical angular range to focus to, e.g. detector height. 0 for no focusing.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>d_theta</TD>
+     <TD>deg</TD>
+     <TD>Longitudinal angle to focus to, i.e. lateral opening angle. This means, the maximum scattering angle, 2*theta, is equal to d_theta/2.0
+</TD>
+<TD ALIGN=RIGHT>360</TD> </TR>
+<TR> <TD>p_interact</TD>
+     <TD>1</TD>
+     <TD>Fraction of events interacting with sample, e.g. 1-p_transmit-p_inc.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>concentric</TD>
+     <TD>1</TD>
+     <TD>Indicate that this component has a hollow geometry and may contain other components. It should then be duplicated after the inside part (only for box, cylinder, sphere).
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>density</TD>
+     <TD>g/cm^3</TD>
+     <TD>Density of material. rho=density/weight/1e24*N_A.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>weight</TD>
+     <TD>g/mol</TD>
+     <TD>Atomic/molecular weight of material [g/mol]
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>barns</TD>
+     <TD>1</TD>
+     <TD>Flag to indicate if |F|^2 from 'reflections' is in barns or fm^2, (barns=1 for laz, barns=0 for lau type files).
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>focus_flip</TD>
+     <TD>1</TD>
+     <TD>Controls the sense of d_phi. If 0 d_phi is measured against the xz-plane. If !=0 d_phi is measured against zy-plane.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=opar></A>Output parameters</H2>
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD><B>line_info</B></TD>
+     <TD>-</TD>
+     <TD>.dq: [Angs^-1] Wavevector transfer of last coherent scattering event.</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>columns</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>mat_columns</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>offdata</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="PowderN.comp">Source code</A> for <CODE>PowderN.comp</CODE>.
+  <LI> See also: Single_crystal
+  <LI> See <a href="http://icsd.ill.fr">ICSD</a> Inorganic Crystal Structure Database
+  <LI> <a href="http://www.ncnr.nist.gov/resources/n-lengths/">Cross sections for single elements</a>
+  <LI> <a href="http://www.ncnr.nist.gov/resources/sldcalc.html>Cross sections for compounds</a>
+  <LI> <a href="http://www.webelements.com/">Web Elements</a>
+  <LI> <a href="http://www.ill.eu/sites/fullprof/index.html">Fullprof</a> powder refinement
+  <LI> <a href="http://www.crystallographica.com/">Crystallographica</a> software (free license)
+  <LI> <a href="http://www.geomview.org">Geomview and Object File Format (OFF)</a>
+  <LI> Java version of Geomview (display only) <a href="http://www.holmes3d.net/graphics/roffview/">jroff.jar</a>
+  <LI> <a href="http://qhull.org">qhull</a>
+  <LI> <a href="http://www.cs.ucdavis.edu/~amenta/powercrust.html">powercrust</a>
+
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

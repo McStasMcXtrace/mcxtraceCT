@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Sandpaper Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Sandpaper</CODE> Component</H1>
+
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> Matteo Busi</B>
+  <LI> <B>Origin:</B> DTU Physics</B>
+  <LI> <B>Date:</B> March 2017</B>
+  <LI> <B>Version:</B> 1.0</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+Sample used to generate sandpaper speckle patterns. It is modeled as a number
+of spheres centered in the same z-plane, with particles' size following 
+normal distribution.
+
+Example: particle_file
+
+  # rho 2.6941 (g cm^-3)
+  # E(keV)	Rayleigh(cm^2 g^-1)	Compton(cm^2 g^-1)	Photo(cm^2 g^-1)
+  2.0000000e+00   1.8380000e+00   3.3750000e-02   2.2610000e+03
+
+Example: sandpaper_file
+#  x0  y0  size  
+	0.027293  -0.111732  0.00446804  
+	-0.118085  0.0430558  0.00524407  
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>particle_file</TD>
+     <TD>".dat"</TD>
+     <TD>File that contains the material cross section of the particles.
+</TD>
+<TD ALIGN=RIGHT>NULL</TD> </TR>
+<TR> <TD>sandpaper_file</TD>
+     <TD>".dat"</TD>
+     <TD>File that contains spheres center positions and sizes.
+</TD>
+<TD ALIGN=RIGHT>NULL</TD> </TR>
+<TR> <TD>xwidth</TD>
+     <TD>m</TD>
+     <TD>X-axis width of the bounding box.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>Y-axis height of the bounding box.
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>n_particles</TD>
+     <TD>Max 10000000</TD>
+     <TD>[m] Maximum number of particles in the bounding box. </TD>
+<TD ALIGN=RIGHT>100</TD> </TR>
+<TR> <TD>particle_size</TD>
+     <TD>m</TD>
+     <TD>Mean size of the particles.
+</TD>
+<TD ALIGN=RIGHT>2e-5</TD> </TR>
+<TR> <TD>particle_std</TD>
+     <TD>m</TD>
+     <TD>Standard distribution of the particles' size.
+</TD>
+<TD ALIGN=RIGHT>5e-6</TD> </TR>
+<TR> <TD>fixed_mu</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>slabs</TD>
+     <TD>Default: 0</TD>
+     <TD>[0,1] If set 1 models the spheres as slablike particles. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Sandpaper.comp">Source code</A> for <CODE>Sandpaper.comp</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

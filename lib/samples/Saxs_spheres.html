@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Saxs_spheres Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Saxs_spheres</CODE> Component</H1>
+
+Sample for Small Angle X-ray Scattering - hard spheres in thin solution, mono disperse.
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> E. B. Knudsen, P. Willendrup, K. Lefmann, L. Arleth</B>
+  <LI> <B>Origin:</B> DTU Fysik</B>
+  <LI> <B>Date:</B> 28.10.2010</B>
+  <LI> <B>Version:</B> beta</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+Sample for use in a SAXS instrument, models hard, monodisperse spheres in thin solution.
+  The shape of the sample may be a filled box with dimensions 
+  xwidth, yheight, zdepth, a cylinder with dimensions radius and yheight,
+  a filled sphere with radius R.
+
+Example: Saxs_spheres(R = 20, Phi = 1e-3, Delta_rho = 0.6, sigma_abs = 50, xwidth=0.01, yheight=0.01, zdepth=0.005)
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>sphere_mtrl</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>NULL</TD> </TR>
+<TR> <TD>R</TD>
+     <TD>AA</TD>
+     <TD>Radius of scattering hard spheres </TD>
+<TD ALIGN=RIGHT>100</TD> </TR>
+<TR> <TD>Phi</TD>
+     <TD>1</TD>
+     <TD>Particle volume fraction </TD>
+<TD ALIGN=RIGHT>1e-3</TD> </TR>
+<TR> <TD>Delta_rho</TD>
+     <TD>fm/AA^3</TD>
+     <TD>Excess scattering length density </TD>
+<TD ALIGN=RIGHT>0.6</TD> </TR>
+<TR> <TD>xwidth</TD>
+     <TD>m</TD>
+     <TD>horiz. dimension of sample, as a width </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>vert . dimension of sample, as a height for cylinder/box </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>zdepth</TD>
+     <TD>m</TD>
+     <TD>depth of sample </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>radius</TD>
+     <TD>m</TD>
+     <TD>Outer radius of sample in (x,z) plane for cylinder/sphere </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>target_x</TD>
+     <TD>-</TD>
+     <TD>
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>target_y</TD>
+     <TD>m</TD>
+     <TD>position of target to focus at </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>target_z</TD>
+     <TD>-</TD>
+     <TD>
+</TD>
+<TD ALIGN=RIGHT>6</TD> </TR>
+<TR> <TD>target_index</TD>
+     <TD>1</TD>
+     <TD>Relative index of component to focus at, e.g. next is +1 </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>focus_xw</TD>
+     <TD>m</TD>
+     <TD>horiz. dimension of a rectangular area </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>focus_yh</TD>
+     <TD>m</TD>
+     <TD>vert.  dimension of a rectangular area </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>focus_aw</TD>
+     <TD>deg</TD>
+     <TD>horiz. angular dimension of a rectangular area </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>focus_ah</TD>
+     <TD>deg</TD>
+     <TD>vert.  angular dimension of a rectangular area </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>focus_r</TD>
+     <TD>m</TD>
+     <TD>Detector (disk-shaped) radius </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>mu_c</TD>
+     <TD>5</TD>
+     <TD>Column of the datafiel which contains absorption coefficients.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=opar></A>Output parameters</H2>
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD><B>shape</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>prms</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>prmsp</B></TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Saxs_spheres.comp">Source code</A> for <CODE>Saxs_spheres.comp</CODE>.
+  <LI> </UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

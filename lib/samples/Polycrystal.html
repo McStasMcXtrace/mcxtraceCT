@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Polycrystal Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Polycrystal</CODE> Component</H1>
+
+Based on code by: Erik Knudsen, Kenichi Oikawa, and Alberto Cereser
+Polycrystal made from single crystal-like voxels
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> Martin Cramer Pedersen (mcpe@nbi.dk)</B>
+  <LI> <B>Origin:</B> University of Copenhagen</B>
+  <LI> <B>Date:</B> January 2015</B>
+  <LI> <B>Version:</B>(Unknown)</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+The component creates a threedimensional grid of cubic instances of the Single_crystal-component,through
+which the rays are propagated. The component relies on a list of possible orientations and stretches of the
+initial unit cell and a list correlating each voxel of the polycrystal to an entry in the list of rotations
+and stretches.
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>ReflectionsDatafile</TD>
+     <TD>usually in .lau-format</TD>
+     <TD>[]     File describing the reflections in the relevant lattice </TD>
+<TD ALIGN=RIGHT>"Si.lau"</TD> </TR>
+<TR> <TD>MaterialDatafile</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>"Si.txt"</TD> </TR>
+<TR> <TD>xwidth</TD>
+     <TD>m</TD>
+     <TD>Width of the sample
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>m</TD>
+     <TD>Height of the sample
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>zdepth</TD>
+     <TD>m</TD>
+     <TD>Depth of the sample
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>ax</TD>
+     <TD>AA</TD>
+     <TD>x-coordinate of the first internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>5.43</TD> </TR>
+<TR> <TD>ay</TD>
+     <TD>AA</TD>
+     <TD>y-coordinate of the first internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>0.00</TD> </TR>
+<TR> <TD>az</TD>
+     <TD>AA</TD>
+     <TD>z-coordinate of the first internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>0.00</TD> </TR>
+<TR> <TD>bx</TD>
+     <TD>AA</TD>
+     <TD>x-coordinate of the second internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>0.00</TD> </TR>
+<TR> <TD>by</TD>
+     <TD>AA</TD>
+     <TD>y-coordinate of the second internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>5.43</TD> </TR>
+<TR> <TD>bz</TD>
+     <TD>AA</TD>
+     <TD>z-coordinate of the second internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>0.00</TD> </TR>
+<TR> <TD>cx</TD>
+     <TD>AA</TD>
+     <TD>x-coordinate of the third internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>0.00</TD> </TR>
+<TR> <TD>cy</TD>
+     <TD>AA</TD>
+     <TD>y-coordinate of the third internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>0.00</TD> </TR>
+<TR> <TD>cz</TD>
+     <TD>AA</TD>
+     <TD>z-coordinate of the third internal unit cell vector in the sample
+</TD>
+<TD ALIGN=RIGHT>5.43</TD> </TR>
+<TR> <TD>Mosaicity</TD>
+     <TD>moa</TD>
+     <TD>Gaussian mosaicity
+</TD>
+<TD ALIGN=RIGHT>3.0</TD> </TR>
+<TR> <TD>MosaicityA</TD>
+     <TD>moa</TD>
+     <TD>Anisotropic mosaicity around the first unit cell vector
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>MosaicityB</TD>
+     <TD>moa</TD>
+     <TD>Anisotropic mosaicity around the second unit cell vector
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>MosaicityC</TD>
+     <TD>moa</TD>
+     <TD>Anisotropic mosaicity around the third unit cell vector
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>DeltadOverd</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0.01</TD> </TR>
+<TR> <TD>ProbabilityOfTransmission</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0.01</TD> </TR>
+<TR> <TD>SigmaAbsorbtion</TD>
+     <TD>fm^2</TD>
+     <TD>Absorbtion crosssection of the sample
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>SigmaIncoherent</TD>
+     <TD>fm^2</TD>
+     <TD>Incoherent crosssection of the sample
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Polycrystal.comp">Source code</A> for <CODE>Polycrystal.comp</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

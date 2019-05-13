@@ -1,0 +1,186 @@
+/*******************************************************************************
+*
+* McXtrace, X-ray tracing package
+*         Copyright, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*         University of Copenhagen, Copenhagen, Denmark
+*
+* Component: Sandpaper
+*
+* %I
+*
+* Written by: Matteo Busi
+* Date: March 2017
+* Version: 1.0
+* Release: McXtrace 1.4
+* Origin: DTU Physics
+*
+*
+* %D
+* Sample used to generate sandpaper speckle patterns. It is modeled as a number
+* of spheres centered in the same z-plane, with particles' size following 
+* normal distribution.
+*
+* Example: particle_file
+*
+*   # rho 2.6941 (g cm^-3)
+*   # E(keV)	Rayleigh(cm^2 g^-1)	Compton(cm^2 g^-1)	Photo(cm^2 g^-1)
+*   2.0000000e+00   1.8380000e+00   3.3750000e-02   2.2610000e+03
+*
+* Example: sandpaper_file
+* #  x0  y0  size  
+*	0.027293  -0.111732  0.00446804  
+*	-0.118085  0.0430558  0.00524407  
+*
+* %P
+* Input parameters:
+* particle_file : [".dat"] File that contains the material cross section of the particles.
+* sandpaper_file : [".dat"] File that contains spheres center positions and sizes.
+* n_particles : [m] Maximum number of particles in the bounding box. (Max 10000000)
+* particle_radius: [m] Mean size of the particles.
+* particle_stdev: [m] Standard distribution of the particles' size.
+* xwidth : [m] X-axis width of the bounding box.
+* yheight : [m] Y-axis height of the bounding box.
+* slabs : [0,1] If set 1 models the spheres as slablike particles. (Default: 0)
+*  
+* %E
+*******************************************************************************/
+
+DEFINE COMPONENT Sandpaper
+DEFINITION PARAMETERS (string particle_file = NULL, string sandpaper_file = NULL)
+SETTING PARAMETERS (xwidth = 1, yheight = 1, n_particles = 100, particle_radius = 2e-5, particle_stdev = 5e-6, fixed_mu = 1, slabs = 0)
+OUTPUT PARAMETERS ()
+/* X-ray parameters: (x,y,z,kx,ky,kz,phi,t,Ex,Ey,Ez,p) */ 
+
+SHARE
+%{
+  %include "read_table-lib"
+%}
+
+DECLARE
+%{
+	double rho; // particle density 
+	double mu;
+	t_Table att_table; // particle cross sections table
+	struct{
+		double size; //sphere size
+		double x0, y0; // sphere center
+	}particles[10000000];
+	t_Table sand_table; // sandpaper model table
+%}
+
+INITIALIZE
+%{	
+	/* SECTION CHECKLIST
+	1. Generate particles positions and size. OK
+	2. Read attenuation table. OK
+		OPTIONAL
+	- Add option to load precomputed sandpaper OK
+	- Add option to offset spheres in the z- direction OK 
+	*/
+
+	int status=0;
+	int n=0, i;
+
+	rho = 1;
+	if(!particle_file){ 
+		mu=fixed_mu; 
+		printf("Material not specified, rho set to 1 and mu set to %g. \n",fixed_mu);
+	}else{
+		if((status=Table_Read(&(att_table),particle_file,0))==-1){ // load the crossection into prms[i].table 
+			fprintf(stderr,"Error: Could not parse file \"%s\" in COMP %s\n",particle_file,NAME_CURRENT_COMP);
+			exit(-1);
+		}
+		/* checking the header for retrieving density */
+		char **header_parsed;
+		header_parsed = Table_ParseHeader(att_table.header,"rho",NULL);
+		if(header_parsed[0]){rho = strtod(header_parsed[0],NULL);}
+		else{fprintf(stderr,"Warning(%s): %s not found in header of %s, set to 1\n",NAME_CURRENT_COMP,"rho",particle_file);}
+		printf("Rho = %1.3f.\n\n",rho);
+	}		
+	
+	/* initialize particles size and center positions */
+	if(!sandpaper_file){
+		printf("Generating sandpaper.\n");
+		do{
+			int overlap=1;
+			double x0_tr = -xwidth/2 + xwidth*rand01();
+			double y0_tr = -yheight/2 + yheight*rand01();
+			double size_tr = particle_radius + particle_stdev*randnorm();
+			while(overlap && n>0){
+				x0_tr = -xwidth/2 + xwidth*rand01();
+				y0_tr = -yheight/2 + yheight*rand01();
+				size_tr = particle_radius + particle_stdev*randnorm();
+				for(i=0;i<n;i++){
+					double dist;
+					if(slabs==1){dist = sqrt((x0_tr - particles[i].x0)*(x0_tr - particles[i].x0)+(y0_tr - particles[i].y0)*(y0_tr - particles[i].y0));}
+					else if(slabs==0){dist = sqrt((x0_tr - particles[i].x0)*(x0_tr - particles[i].x0)+(y0_tr - particles[i].y0)*(y0_tr - particles[i].y0)+(size_tr - particles[i].size)*(size_tr - particles[i].size));}					
+					double size_tot = (size_tr + particles[i].size);
+					if(dist>size_tot){overlap=0;}
+					else{overlap =1; break;	}
+				}
+			}
+			printf("Filled %d particles, %g percent\n",n+1,100*((n+1)/n_particles));
+			particles[n].size = size_tr;
+			particles[n].x0 = x0_tr;
+			particles[n].y0 = y0_tr;
+			n++;
+		}while(n<n_particles);
+		printf("Sandpaper generated. Storing for later use in 'sandpaper.dat' file.\n");
+		FILE *fp;
+		fp = fopen("Sandpaper.dat","w+");
+		fprintf(fp,"#  x0  y0  size  \n");
+		for(i=0;i<n_particles;i++){
+			fprintf(fp,"%g  %g  %g  \n",particles[i].x0,particles[i].y0,particles[i].size);
+		}
+		fclose(fp); printf("Starting tracing.\n");
+	}
+	else{
+		if((status=Table_Read(&(sand_table),sandpaper_file,0))==-1){ // load the crossection into prms[i].table 
+			fprintf(stderr,"Error: Could not parse file \"%s\" in COMP %s\n",sandpaper_file,NAME_CURRENT_COMP);
+			exit(-1);
+		}
+		n_particles = (double)sand_table.rows; 
+		printf("Number of particles: %g\n",n_particles);
+		for(i=0;i<n_particles;i++){
+			//store particle positions and 
+			particles[i].x0 = Table_Index(sand_table,i,0);
+			particles[i].y0 = Table_Index(sand_table,i,1);
+			particles[i].size = Table_Index(sand_table,i,2);
+		}
+	}
+%}
+
+TRACE
+%{		
+	double d0, d1, dl;
+	double E;	
+	int n = 0;
+	int hit = 0;
+	
+	while(!hit && n<n_particles){ // untill the ray intersects a sphere or reach the limit
+		hit = sphere_intersect(&d0, &d1, x+particles[n].x0, y+particles[n].y0, z+particles[n].size, kx, ky, kz, particles[n].size);	// check intersection with the spheres
+		if(hit){
+			SCATTER;
+			dl = fabs(d1-d0); // optical path
+			//printf("Particle size = %g , dl = %g.\n",particles[n].size,dl);
+			E = sqrt(kx*kx+ky*ky+kz*kz)*K2E; // wave_vector amplitude // energy of the ray
+			if(particle_file){mu = Table_Value(att_table,E,3)+Table_Value(att_table,E,2)+Table_Value(att_table,E,1);}
+			if(slabs==0){p*=exp(-mu*rho*dl*1e2);} // spheres
+			else if(slabs==1){ // slabs
+				if(dl>0.2*particles[n].size){ p*=exp(-mu*rho*(particles[n].size*2)*1e2);}
+				else{p*=exp(-mu*rho*dl*1e2);}
+			}
+		}
+		n++;
+	}
+%}
+
+MCDISPLAY
+%{
+	magnify("xy");
+	box(0,0,0,xwidth,yheight,particle_radius);
+%}
+
+END

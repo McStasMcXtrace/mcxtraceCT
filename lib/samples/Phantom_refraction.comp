@@ -1,0 +1,216 @@
+/*******************************************************************************
+*
+* McXtrace, X-ray tracing package
+*         Copyright, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*         University of Copenhagen, Copenhagen, Denmark
+*
+* Component: Multi_materials
+*
+* %I
+*
+* Written by: Matteo Busi, Jeppe R Frisvad, Erik B Knudsen
+* Date: March 2017
+* Version: 1.0
+* Release: McXtrace 1.4
+* Origin: DTU Physics
+*
+* Sample composed of multiple materials
+*
+* %D
+* This component is to simulate samples consisting of multiple materials (E.g. luggage, body parts, etc. ).
+* The object is defined by an input 2D or 3D array, in which each cell label a different material. 
+* Example of a 5x5 (size=5) object_file.dat:
+*	1 0 1 1 0
+*  2 1 0 0 1
+*  2 3 3 3 3
+*	1 2 1 0 1
+* 	0 0 0 2 1 
+* With 0 being empty, 1 mapping into "1.dat", 2 mapping into "2.dat", which are tables containing the parameters in the headers
+* and the cross sections.
+* Moreover, a corresponding can be provided to include scattering such as "... _scatt.dat". That is the CDF(Cumulative density function) of scattering function (diffraction
+* pattern ) parametrized as sin(theta)/lambda.
+* Always make sure the orientation is what you expect. Otherwise rotate the sample component about (0, omega, 0).
+*
+* Example: 1.dat
+*   # rho 2.6941 (g cm^-3)
+*   # E(keV)	Rayleigh(cm^2 g^-1)	Compton(cm^2 g^-1)	Photo(cm^2 g^-1)
+*   2.0000000e+00   1.8380000e+00   3.3750000e-02   2.2610000e+03
+*   
+* Example: 1_scatt.dat
+*   # probability_density(p/1)  sin(theta)/lambda
+*	 7.7383064e-04   7.3613105e-02
+*	 ...	...
+*   1.0000000e+00   4.5558497e-01
+*
+*
+* %P
+* Input parameters:
+* object_file : [".dat"] File that contains the sample phantom.
+* normal_file : [".dat"] File that contains the sample's respective surface tangent inclination phantom.
+* voxel_size : [m] That's the width in meters of the cells defined by the object.
+* step_length : [m] That's the propagation length within the phantom of each step while looping.
+* yheight: [m] Vertical height of the phantom.
+*  
+* %E
+*******************************************************************************/
+
+DEFINE COMPONENT Phantom_refraction
+DEFINITION PARAMETERS (string object_file = 0, string normal_file = 0)
+SETTING PARAMETERS (voxel_size = 1e-3, step_length = 5e-4, yheight = 1e-1)
+OUTPUT PARAMETERS ()
+/* X-ray parameters: (x,y,z,kx,ky,kz,phi,t,Ex,Ey,Ez,p) */ 
+
+SHARE
+%{
+  %include "read_table-lib"
+%}
+
+DECLARE
+%{
+	t_Table Obj_table; // table where the object_file is stored
+	t_Table Obj_eta; // table etaent
+    struct{
+		double rho; // material properties
+		int filled; // to check if material was encountered later
+		t_Table att_table; // cross sections table
+		t_Table n_table; // refractive index table
+	} prms[200]; // 200 is the maximum number of distinct materials (should be defined later when database is ready)
+	int i, j; // voxel loop indices
+	double box_size_x, box_size_z; // phantom box sizes (mm)
+	double obj_size_x, obj_size_z; // phantom box sizes (1)
+	int obj[1000][1000]; // 300: maximum phantom size
+	double eta[1000][1000];
+%}
+
+INITIALIZE
+%{	
+	/* SECTION CHECKLIST
+	1. Check consistency of inputs - OK
+	2. Load object file into the table then array - OK
+	3. Open and load the material datafiles associated to each index into the prms (only once for each unique material) - OK
+	*/
+
+	int status=0;
+
+	if((status=Table_Read(&Obj_table, object_file, 0))==-1){ // loads file into table
+		fprintf(stderr,"Error: Could not parse file \"%s\" in COMP %s\n",object_file,NAME_CURRENT_COMP);
+		exit(-1);
+    }
+	/* Figuring size of phantom */
+	obj_size_x = (double)Obj_table.rows;
+	obj_size_z = (double)Obj_table.columns;
+	box_size_x = voxel_size*obj_size_x;
+	box_size_z = voxel_size*obj_size_z;
+	printf("Phantom size: %gx%g\n",obj_size_x,obj_size_z);
+	if((status=Table_Read(&Obj_eta, normal_file, 0))==-1){ // loads file into table
+		fprintf(stderr,"Error: Could not parse file \"%s\" in COMP %s\n",normal_file,NAME_CURRENT_COMP);
+		exit(-1);
+	}		
+	/* Load the phantom read as table into the 2D phantom array*/
+	for(i=0;i<obj_size_x;i++){ 
+		for(j=0;j<obj_size_z;j++){
+			obj[i][j] = Table_Index(Obj_table,i,j);
+			prms[obj[i][j]].filled=0;
+			eta[i][j]=0;
+		}
+	}
+	for(i=0;i<obj_size_x;i++){ // this loop open the unique material datafiles into prms.
+		char mat_fn[512] = {0};
+		char n_fn[512] = {0};
+		for(j=0;j<obj_size_z;j++){
+			eta[i][j]=Table_Index(Obj_eta,i,j);
+			if(obj[i][j]){ // Only when it's not zero (air)
+				if(prms[obj[i][j]].filled==0){ // Only if that material wasn't loaded before
+					prms[obj[i][j]].filled = 1;
+					/* loading absorption and scattering cross sections */
+					snprintf(mat_fn,512,"%d.dat",obj[i][j]);
+					if((status=Table_Read(&(prms[obj[i][j]].att_table),mat_fn,0))==-1){ // load the crossection into prms[i].table 
+						fprintf(stderr,"Error: Could not parse file \"%s\" in COMP %s\n",mat_fn,NAME_CURRENT_COMP); exit(-1);
+					}
+					/* loading refractive index */
+					snprintf(n_fn,512,"%d_n.dat",obj[i][j]);
+					if((status=Table_Read(&(prms[obj[i][j]].n_table),n_fn,0))==-1){ // load the refractive index into prms[i].table 
+						fprintf(stderr,"Error: Could not parse file \"%s\" in COMP %s\n",n_fn,NAME_CURRENT_COMP); exit(-1);
+					}
+					/* checking the header for retrieving density */
+					char **header_parsed;
+					header_parsed = Table_ParseHeader(prms[obj[i][j]].att_table.header,"rho",NULL);
+					if(header_parsed[0]){prms[obj[i][j]].rho = strtod(header_parsed[0],NULL);}
+					else{fprintf(stderr,"Warning(%s): %s not found in header of %s, set to 1\n",NAME_CURRENT_COMP,"rho",mat_fn); prms[obj[i][j]].rho = 1;}
+					printf("Rho = %1.3f.\n",prms[obj[i][j]].rho);
+				}					
+			}
+		}
+	}
+	if((status=Table_Read(&(prms[0].n_table),"0_n.dat",0))==-1){ // load the air refractive index
+		fprintf(stderr,"Error: Could not parse file \"%s\" in COMP %s\n","0_n.dat",NAME_CURRENT_COMP); exit(-1);
+	}
+%}
+
+TRACE
+%{		
+	int hit_sample = 0;
+	int mat=0;
+	double d0, d1, step_size;	
+	double k, mu, E;
+	double n1, n2;
+	double inc_mul=0;
+	
+ 	hit_sample = box_intersect(&d0, &d1, x, y, z, kx, ky, kz, box_size_x, yheight, box_size_z);	// check intersection with the phantom
+	if(hit_sample){ //checks if ray intersects the 2D array in the first place
+		PROP_DL(d0); // X-ray propagates untill the first intersection with the box
+		n1=1 - Table_Value(prms[obj[i][j]].n_table,E*1e3,1); // starting refractive index
+		k = sqrt(kx*kx+ky*ky+kz*kz); // wave_vector amplitude
+		E = k*K2E; // energy of the ray
+		do{	// loops until it reaches the end of the box
+			step_size = step_length; // set step size
+			if(inc_mul==0){ // only at first step randomize step size to reduce regularity artifacts
+				step_size*= rand01();
+			}
+			/* Now we find in which pixel we are */
+			i = floor(fabs(obj_size_x+((x+step_size*1e-2)-(box_size_x/2))/voxel_size)); // the increment to x is due to boundary errors.
+			j = floor(fabs(obj_size_z+((z+step_size*1e-2)-(box_size_z/2))/voxel_size));  // the obj_size- is due to the fact that the phantom otherwise would be inverted
+			if(obj[i][j]==0){ // checks if voxel is filled with something.
+				mu=0;
+			}else{ // pixel is filled with some object
+				mu = prms[obj[i][j]].rho*(Table_Value(prms[obj[i][j]].att_table,E,3)+Table_Value(prms[obj[i][j]].att_table,E,1)+Table_Value(prms[obj[i][j]].att_table,E,2)); // read attenuation (ph.ab. + scattering)
+			}
+			n2 = 1 - Table_Value(prms[obj[i][j]].n_table,E*1e3,1); //read refractive index
+			if(mat!=obj[i][j]){ //when material is different --> refraction				
+				SCATTER;
+				double theta = eta[i][j]; if(theta<0){theta = PI-fabs(theta);}
+				k=1/k; kx*=k; ky*=k; kz*=k; //normalize incident ray
+				double nx = cos(theta); double ny = 0; double nz = -sin(theta); // normal to surface determination
+				double n1n2 = n1/n2;
+				double cosI = -(nx*kx + nz*kz);
+				double sinT2 = n1n2*n1n2*(1-cosI*cosI);
+				if(sinT2>1){ // Total internal reflection
+					kx+= 2*cosI*nx;
+					//ky+= 2*cosI*ny;
+					kz+=2*cosI*nz;
+				} else { // Transmission: refraction
+					double cosT= sqrt(1-sinT2);
+					kx = n1n2*kx + (n1n2*cosI - cosT) * nx;
+					//ky = n1n2*ky + (n1n2*cosI - cosT) * ny;
+					kz = n1n2*kz + (n1n2*cosI - cosT) * nz;
+				}
+				k=1/k; kx*=k; ky*=k; kz*=k; // rescale to ray's energy	
+				n1=n2; // update refractive index
+			}
+		mat=obj[i][j];
+		PROP_DL(step_size); // X-ray propagates of the step_size
+		inc_mul = inc_mul + mu*step_size*1e2; // store the stepped absorption
+	  }while((x<box_size_x/2 || x==box_size_x/2) && (x>-(box_size_x/2) || x==-(box_size_x/2)) && (z<box_size_z/2 || z==box_size_z/2) && (z>-(box_size_z/2) || z==-(box_size_z/2)) && (y<yheight/2 || y==yheight/2) && (y>-(yheight/2) || y==-(yheight/2)));
+	  p*= exp(-inc_mul); // apply final weight to the X-ray
+	}
+%}
+
+MCDISPLAY
+%{
+	magnify("xy");
+	box(0,0,0,box_size_x,yheight,box_size_z);
+%}
+
+END

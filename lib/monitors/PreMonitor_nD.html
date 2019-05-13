@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: PreMonitor_nD Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>PreMonitor_nD</CODE> Component</H1>
+
+Modified for xrays by Erik B Knudsen
+Xray parameters spatial cross-correlation monitor.
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> <a href="mailto:farhi@ill.fr">Emmanuel Farhi</a></B>
+  <LI> <B>Origin:</B> <a href="http://www.ill.fr">ILL (France)</a></B>
+  <LI> <B>Date:</B> 01st Nov 2011.</B>
+  <LI> <B>Version:</B> $Revision$</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+Photon parameters are stored when entering in the PreMonitor.
+If this photon then reaches the associated Monitor_nD, this latter
+component measures the previously stored parameters. This enables to study
+correlations between a given parameter in one place of the instrument
+and an other detection position in the instrument.
+
+<b>EXAMPLES:</b>
+Here follows a Phase-Space correlation diagram detector
+(used for guides for instance)
+
+ MyPreMonitor = PreMonitor_nD(
+  monitor_comp = MyMonitor)
+
+...some optics....
+
+MyMonitor = Monitor_nD(
+  xmin = -0.1, xmax = 0.1,
+  ymin = -0.1, ymax = 0.1,
+  options = "hdiv x, auto, use premonitor");
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD><B>monitor_comp</B></TD>
+     <TD>no quotes</TD>
+     <TD>name of the associated Monitor_nD where the detection should take place </TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="PreMonitor_nD.comp">Source code</A> for <CODE>PreMonitor_nD.comp</CODE>.
+  <LI> <a href="Monitor_nD.html">Monitor_nD</a>
+
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

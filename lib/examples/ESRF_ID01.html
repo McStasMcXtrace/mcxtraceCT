@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: ESRF_ID01 Instrument at  ESRF</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>ESRF_ID01</CODE> Instrument</H1>
+
+Nano-diffraction imaging beamline at ESRF, Grenoble
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Site:    ESRF</B>
+  <LI> <B>Author:</B> Martin Cramer Pedersen (mcpe@nbi.dk)</B>
+  <LI> <B>Origin:</B> University of Copenhagen</B>
+  <LI> <B>Date:</B> March, 2015</B>
+  <LI> <B>Version:</B>(Unknown)</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+This model of ID01 is designed specifically to conduct virtual scanning nano-diffraction imaging 
+experiments such as the one demonstrated Chahine et al., J. Appl. Cryst 47, 762-769. The model 
+includes beam-defining slits, a double Si111-monochromator, a Fresnel Zone Plate, a polycrystalline  
+sample designed specifically for this type of virtual experiments, and a detector set up mimicking the  
+set up at the actual beam-line. The nanodiffraction experiment is performed by locating a suitable peak
+in the diffraction of the crystal (using the variables NominalEnergy, Delta, and Eta) 
+and then scan across the sample (using the variables Pix and ySamplePosition). By plotting 
+e.g. total detector intensity as a function of position, one can map out impurities in the sample by  
+their scattering properties.
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>DistanceSampleToDetector</TD>
+     <TD>m</TD>
+     <TD>Distance from sample to detector
+</TD>
+<TD ALIGN=RIGHT>0.5</TD> </TR>
+<TR> <TD>NominalEnergy</TD>
+     <TD>keV</TD>
+     <TD>Nominal energy of photons after monochromation
+</TD>
+<TD ALIGN=RIGHT>8.0</TD> </TR>
+<TR> <TD>Delta</TD>
+     <TD>deg</TD>
+     <TD>Angle rotating the detector around the sample in the yz-plane
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>Nu</TD>
+     <TD>for asymmetric peaks</TD>
+     <TD>[deg] Horizontal plane rotation angle of the detector </TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>Eta</TD>
+     <TD>deg</TD>
+     <TD>Angle between the incoming beam and the sample normal in the yz-plane
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>Phi</TD>
+     <TD>for asymmetric peaks</TD>
+     <TD>[deg] Horizontal plane rotation angle of the sample </TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>Pix</TD>
+     <TD>um</TD>
+     <TD>Horizontal offset of sample
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>Piy</TD>
+     <TD>um</TD>
+     <TD>Vertical offset of sample
+</TD>
+<TD ALIGN=RIGHT>0.0</TD> </TR>
+<TR> <TD>SampleMosaicity</TD>
+     <TD>moa</TD>
+     <TD>Mosaicity of the sample crystal lattice
+</TD>
+<TD ALIGN=RIGHT>1.0</TD> </TR>
+<TR> <TD>SampleDeltadoverd</TD>
+     <TD></TD> <TD></TD>
+<TD ALIGN=RIGHT>0.001</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="ESRF_ID01.instr">Source code</A> for <CODE>ESRF_ID01.instr</CODE>.
+  <LI> http://www.esrf.eu/UsersAndScience/Experiments/StructMaterials/ID01
+
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

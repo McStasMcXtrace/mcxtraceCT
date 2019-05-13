@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Pump_probe_solvent Instrument at  DTU-Fysik</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Pump_probe_solvent</CODE> Instrument</H1>
+
+Design study of a pump and probe type instrument. The sample is an excitable molecule
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Site:    DTU-Fysik</B>
+  <LI> <B>Author:</B> Erik B Knudsen</B>
+  <LI> <B>Origin:</B> DTU Fysik</B>
+  <LI> <B>Date:</B> \today</B>
+  <LI> <B>Version:</B> 0.2</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+This is an example instrument for simulating time resolved scattering from
+optically excitable, disordered molecules in solution, including scattering
+signal from the solvent. By FSOLV it is possible to change the concentration of
+solute.
+
+This is to be considered a concept instrument model, i.e. it is _not_ a model of
+an existing real instrument. A simple flat source emitting photons impinge on a chopper,
+defining an X-ray pulse. Timing jitter in the chopper may be included through the JITTER
+parameter which introduces a random uncertainty in the timing of the pulse.
+
+The X-ray pulse is allowed to propagate to the sample which is excited by an instantaneous laser
+pulse at t=0. The whole sample is assumed to be excited uniformly.
+A Monte Carlo choice between interacting with solvent or solute is performed at the sample position.
+The chopper is set such that the X-ray pulse front will arive at the sample at t=Dt. Thus,
+setting Dt<-tau (chopper opening time) will simulate the "laser-off" setting.
+
+The sampling of the scattered signal may be controlled by PSIMAX,PSIMIN and ETAMAX,ETAMIN
+parameters. Please be aware the by restricting the azimuthal range it is not uncommon to underfill
+the acceptance area of subsequent components. This is particularly the case for small psi.
+
+Example: mxrun Pump_probe.instr Dt=2e-9 Detector: 1dpsd_I=2.78312e-26
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>excitation_prob</TD>
+     <TD>1</TD>
+     <TD>Fraction of the molecules in solution that are excited at t=0.
+</TD>
+<TD ALIGN=RIGHT>0.2</TD> </TR>
+<TR> <TD>Dt</TD>
+     <TD>1</TD>
+     <TD>Time delay between laser pulse exciting the sample and the x-ray pulse.
+</TD>
+<TD ALIGN=RIGHT>100e-9</TD> </TR>
+<TR> <TD>PSIMIN</TD>
+     <TD>deg.</TD>
+     <TD>Minimum scattering angle to be simulated.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>PSIMAX</TD>
+     <TD>deg.</TD>
+     <TD>Maximum scattering angle to be simulated.
+</TD>
+<TD ALIGN=RIGHT>50</TD> </TR>
+<TR> <TD>FSOLV</TD>
+     <TD> =1 means only solvent, =0 only solute</TD>
+     <TD>[ ] Volume fraction of solvent to solute. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>JITTER</TD>
+     <TD>s</TD>
+     <TD>Jitter in chopper.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>ETAMIN</TD>
+     <TD>deg.</TD>
+     <TD>Minimum azimuthal angle for scattered photons.
+</TD>
+<TD ALIGN=RIGHT>-180</TD> </TR>
+<TR> <TD>ETAMAX</TD>
+     <TD>deg.</TD>
+     <TD>Maximum azimuthal angle for scattered photons.
+</TD>
+<TD ALIGN=RIGHT>180</TD> </TR>
+<TR> <TD>NOSOLVENT</TD>
+     <TD> </TD>
+     <TD>If nonzero - ignore scattering from solvent.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>NOSOLUTE</TD>
+     <TD> </TD>
+     <TD>If nonzeor - ignore scattering from solute.
+</TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Pump_probe_solvent.instr">Source code</A> for <CODE>Pump_probe_solvent.instr</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

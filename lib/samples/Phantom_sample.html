@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Phantom_sample Component</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Phantom_sample</CODE> Component</H1>
+
+Sample composed of multiple materials
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Author:</B> Matteo Busi, Jeppe R Frisvad, Erik B Knudsen</B>
+  <LI> <B>Origin:</B> DTU Physics</B>
+  <LI> <B>Date:</B> November 2017</B>
+  <LI> <B>Version:</B> 1.0</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+This component is to simulate samples described by mathematical phantoms.
+The object is defined "object_file", which is a 2D slice vertically homogeneous, in which each cell index label a different material. 
+Example of a 5x5 (size=5) object_file:
+	1 0 1 1 0
+ 2 1 0 0 1
+ 2 3 3 3 3
+	1 2 1 0 1
+	0 0 0 2 1 
+With 0 being empty, 1 mapping into "1.dat", 2 mapping into "2.dat", which are tables containing the parameters in the headers
+and the cross sections.
+If scattering is enabled the user can provide the Cumulative Distribution Functions (CDF) of the incoherent and coherent scattering functions I(Q) respectively as "... _inc.dat" and "... _coh.dat". 
+These contain the CDF(Cumulative density function) of scattering function (I(Q)) parametrized as Q=4*pi*sin(theta)/lambda.
+If refraction is enbaled the user must provide an additional file "normal_file", similar to the phantom but in which each cell holds the inclination of the plane tangent to the surface.
+This can be obtained for example by convoluting the sample phantom with the Sobel or Prewitt operators. In this component the inclination is respective to the z-axis.
+Finally, a last file containing the lookup tables for the refractive index are required "... _n.dat"
+
+Example: 1.dat
+  # rho 2.6941 (g cm^-3)
+  # E(keV)	Rayleigh(cm^2 g^-1)	Compton(cm^2 g^-1)	Photo(cm^2 g^-1)
+  2.0000000e+00   1.8380000e+00   3.3750000e-02   2.2610000e+03
+  2.0000000e+00   1.8380000e+00   3.3750000e-02   2.2610000e+03
+  
+Example: 1_coh.dat
+  # probability_density(p/1)  sin(theta)/lambda
+	 7.7383064e-04   7.3613105e-02
+	 ...	...
+	 ...	...
+  1.0000000e+00   4.5558497e-01
+
+Example: 1_inc.dat
+# x(E,theta)=20.6074*(E/511)*sqrt(2*(1-cos(theta))) 				S(x)
+   0.0000000e+00   0.0000000e+00
+   1.6132650e-03   1.1893451e-03
+
+Example: 1_n.dat
+  # E(eV)	delta()
+  2.0000000e+00   1.8380000e+00  
+
+For more information you can contact M. Busi at mbusi@fysik.dtu.dk
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>object_file</TD>
+     <TD>Required</TD>
+     <TD>[".dat"] Sample phantom file. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>normal_file</TD>
+     <TD>Optional - Required if(refraction_switch)</TD>
+     <TD>[".dat"] Sample inclination(in radians) of the plane tangent to the surface file.  </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>voxel_size</TD>
+     <TD>Default 1e-3</TD>
+     <TD>[m] Voxel size in meters of the phantom. </TD>
+<TD ALIGN=RIGHT>1e-3</TD> </TR>
+<TR> <TD>step_length</TD>
+     <TD>Default 3e-4</TD>
+     <TD>[m] Propagation length within the phantom of each step while tracing through. We suggest one third of the voxel_size. </TD>
+<TD ALIGN=RIGHT>3e-4</TD> </TR>
+<TR> <TD>yheight</TD>
+     <TD>Default 1e-1</TD>
+     <TD>[m] Vertical height of the phantom. </TD>
+<TD ALIGN=RIGHT>1e-1</TD> </TR>
+<TR> <TD>phabs_switch</TD>
+     <TD>Default 1</TD>
+     <TD>[0,1] Set to a value for enabling photo-absorption (complex part of refractive index). </TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>refraction_switch</TD>
+     <TD>Default 0</TD>
+     <TD>[0,1] Set to a value for enabling refraction (real part of refractive index). </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>scattering_switch</TD>
+     <TD>Default 0</TD>
+     <TD>[0,1] Set to a value for enabling scattering. </TD>
+<TD ALIGN=RIGHT>0</TD> </TR>
+<TR> <TD>scattering_order</TD>
+     <TD>Optional - Default 3</TD>
+     <TD>[1,2,3,...] The maximum number of scattering events. </TD>
+<TD ALIGN=RIGHT>3</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=opar></A>Output parameters</H2>
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD><B>compton_flag</B></TD>
+     <TD>0,1</TD>
+     <TD>If 1 there was at least one compton scattering event
+</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>rayleigh_flag</B></TD>
+     <TD>0,1</TD>
+     <TD>If 1 there was at least one rayleigh scattering event
+</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>single_flag</B></TD>
+     <TD>0,1</TD>
+     <TD>If 1 there was a single scattering event
+</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+<TR> <TD><B>multiple_flag</B></TD>
+     <TD>0,1</TD>
+     <TD>If 1 there were multiple scattering events
+</TD>
+<TD ALIGN=RIGHT>&nbsp;</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Phantom_sample.comp">Source code</A> for <CODE>Phantom_sample.comp</CODE>.
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>

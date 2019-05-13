@@ -1,0 +1,104 @@
+/*******************************************************************************
+*
+* McXtrace, X-ray tracing package
+*         Copyright, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         University of Copenhagen, Copenhagen, Denmark
+*
+* Component: Absorption_sample
+*
+* %I
+*
+* Written by:Erik B Knudsen
+* Date: March 2011
+* Version: 1.0
+* Release: McXtrace 1.0
+* Origin: Risoe
+*
+* Sample component with absorbing materials.
+*
+* %D
+*
+* %P
+* Input parameters: 
+* radius: [m] Radius of material cylinder (0)
+* xwidth: [m] Width of enclosing material box (yheight)
+* yheight: [m] Height of material box (1) 
+* zdepth: [m] Thickness of material box (yheight)
+* thetamin: [deg] Minimum scattering angle (0)
+* thetawidth: [deg] Width of the scattering sampling (360)
+*
+* %E
+*******************************************************************************/
+
+DEFINE COMPONENT Uniform_scatterer
+DEFINITION PARAMETERS ()
+SETTING PARAMETERS (radius=0,xwidth=0,yheight=1,zdepth=0,thetamin=0,thetawidth=360)
+OUTPUT PARAMETERS ()
+/* X-ray parameters: (x,y,z,kx,ky,kz,phi,t,Ex,Ey,Ez,p) */ 
+
+SHARE
+%{
+  %include "read_table-lib"
+%}
+
+DECLARE
+%{
+%}
+
+INITIALIZE
+%{
+  int status;
+  /* Checking volumes */
+  if (yheight && !radius){
+    if (!zdepth) zdepth=yheight;
+    if (!xwidth) xwidth=yheight;
+  }else if (!yheight && !radius){
+    fprintf(stderr,"Uniform_scatterer(%s): Error: Unmeaningful outer volume description\n",NAME_CURRENT_COMP);
+    exit(0);
+  }
+%}
+
+TRACE
+%{
+  double l0, l1, dl;
+  double xi, k, kf, kfx, kfz;
+  double cosxi, sinxi;
+  int hit = 0;
+  if (radius && yheight){
+    hit = cylinder_intersect(&l0,&l1,x,y,z,kx,ky,kz,radius,yheight);
+  }else{
+    hit = box_intersect(&l0,&l1,x,y,z,kx,ky,kz,xwidth,yheight,zdepth);
+  }
+  dl = (l1-l0)*rand01();
+  if (hit){ /*rays intersects the enclosing material*/
+    PROP_DL(l0);
+	PROP_DL(dl);
+    SCATTER;
+	// now scatters uniformly between interval
+	thetamin= thetamin*DEG2RAD;	thetawidth= thetawidth*DEG2RAD;
+	xi = (thetawidth*rand01())+thetamin;
+	cosxi = cos(xi); sinxi = sin(xi);
+	kfx = cosxi*kx + sinxi*kz;
+	kfz = cosxi*kz - sinxi*kx;
+	kx=kfx; kz = kfz;
+  }
+%}
+
+MCDISPLAY
+%{
+  /* A bit ugly; hard-coded dimensions. */
+  magnify("");
+  if (radius && yheight){
+    circle("xz",0, yheight/2.0,0,radius);
+    circle("xz",0,-yheight/2.0,0,radius);
+    line(-radius,-yheight/2.0,0,-radius,yheight/2.0,0);
+    line( radius,-yheight/2.0,0, radius,yheight/2.0,0);
+    line(0,-yheight/2.0,-radius,0,yheight/2.0,-radius);
+    line(0,-yheight/2.0, radius,0,yheight/2.0, radius);
+  }else{
+    box(0,0,0,xwidth,yheight,zdepth);
+  }
+%}
+
+END

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML><HEAD>
+<TITLE>McXtrace: Be_BM_beamline Instrument at  None</TITLE>
+<LINK REV="made" HREF="mailto:peter.willendrup@risoe.dk">
+</HEAD>
+
+<BODY>
+
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<H1>The <CODE>Be_BM_beamline</CODE> Instrument</H1>
+
+Be-lens Bending Magnet, Low Budget Monochromatic (pink) X-ray beamline
+
+
+<H2><A NAME=id></A>Identification</H2>
+
+<UL>
+  <LI> <B>Site:    None</B>
+  <LI> <B>Author:</B> E. Knudsen (erkn@risoe.dtu.dk)</B>
+  <LI> <B>Origin:</B> Ris&oslash; DTU</B>
+  <LI> <B>Date:</B> Sept. 15th, 2009</B>
+  <LI> <B>Version:</B> $Revision$</B>
+</UL>
+<H2><A NAME=desc></A>Description</H2>
+
+<PRE>
+This is a proof of concept beamline to test an idea of how to build a low-cost
+monochromtic beamline. Idea is to let a åolychromatic beam impinge on a focusing
+Be-lens and put a slit in the focal pt. of the lens for the desired wavelength. Any
+other wavelengths present in the beam will not be focussed prefectly and may be
+by the slit.
+
+</PRE>
+
+<H2><A NAME=ipar></A>Input parameters</H2>
+Parameters in <B>boldface</B> are required;
+the others are optional.
+<TABLE BORDER=1>
+<TR><TH>Name</TH>  <TH>Unit</TH>  <TH>Description</TH> <TH>Default</TH></TR>
+<TR> <TD>L1</TD>
+     <TD>m</TD>
+     <TD>Distance between source and lens
+</TD>
+<TD ALIGN=RIGHT>10</TD> </TR>
+<TR> <TD>L2</TD>
+     <TD>m</TD>
+     <TD>Distance between lens and and slit
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+<TR> <TD>dS</TD>
+     <TD>m</TD>
+     <TD>Slit opening. Slit opening is quadratic.
+</TD>
+<TD ALIGN=RIGHT>1e-2</TD> </TR>
+<TR> <TD>N</TD>
+     <TD>1</TD>
+     <TD>NUmber of Lenses in the compund lens arrangement
+</TD>
+<TD ALIGN=RIGHT>1</TD> </TR>
+</TABLE>
+
+
+<H2><A NAME=links></A>Links</H2>
+
+<UL>
+  <LI> <A HREF="Be_BM_beamline.instr">Source code</A> for <CODE>Be_BM_beamline.instr</CODE>.
+  <LI> 
+</UL>
+<HR>
+<P ALIGN=CENTER>
+ [ <A href="#id">Identification</A>
+ | <A href="#desc">Description</A>
+ | <A href="#ipar">Input parameters</A>
+ | <A href="#opar">Output parameters</A>
+ | <A href="#links">Links</A> ]
+</P>
+
+<ADDRESS>
+Generated automatically by McDoc, Peter Willendrup
+&lt;<A HREF="mailto:peter.willendrup@risoe.dk">peter.willendrup@risoe.dk</A>&gt; /
+Wed Jan 24 09:57:09 2018</ADDRESS>
+</BODY></HTML>
