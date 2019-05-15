@@ -274,14 +274,14 @@ TRACE
 							if(ksi>pinc && ksi<pinc+pcoh && rayleigh_switch){ // Rayleigh Scattering
 								scatter_number++; SCATTER;// increment scatter number
 								rayleigh_flag = 1; // coh scatter flag
-								double arg = Table_Value(prms[obj[i][ii][j]].coh_table,rand01(),1)*2*PI/k;
+								double arg = Table_Value(prms[obj[i][ii][j]].coh_table,rand01(),1)/(2*k);
 								int kk=0, kmax = 10;
 								while(arg>1 && kk<kmax){
 									kk++;
-									arg = Table_Value(prms[obj[i][ii][j]].coh_table,rand01(),1)*2*PI/k;
+									arg = Table_Value(prms[obj[i][ii][j]].coh_table,rand01(),1)/(2*k);
 								} //reject bad values
 								if(kk==kmax){arg = 1;phi = 0;	rayleigh_flag=0;}
-								sintheta = sin(2*asin(arg)); // sample sintheta from tables
+								sintheta = sin(asin(arg)); // sample sintheta from tables
 								costheta = sqrt(1-sintheta*sintheta); 
 								phi = rand01()*2*PI; // azimuthal angle
 								cosphi = cos(phi); sinphi = sin(phi);
