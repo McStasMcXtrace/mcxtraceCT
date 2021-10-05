@@ -115,7 +115,7 @@ DECLARE
   double box_size_z;
   unsigned int obj_size_x; // phantom slice size (1)
   unsigned int obj_size_z;
-  int obj[MAX_PHANTOM_SIZE_X][MAX_PHANTOM_SIZE_Y][MAX_PHANTOM_SIZE_Z]; //maximum phantom size
+  unsigned short ***obj;//[MAX_PHANTOM_SIZE_X][MAX_PHANTOM_SIZE_Y];//[MAX_PHANTOM_SIZE_Z]; //maximum phantom size
   int compton_flag; // event type flags
   int rayleigh_flag;
   int single_flag;
@@ -131,6 +131,21 @@ INITIALIZE
      2. Load object file into the table then array - OK
      3. Open and load the material datafiles associated to each index into the prms (only once for each unique material) - OK
    */
+
+  obj = calloc(obj_size_x,sizeof(unsigned short **));
+  int err=(obj==NULL);
+  for (i=0;i<obj_size_x;i++){
+    obj[i]=calloc(nslices,sizeof(unsigned short *));
+    err+=(obj[i]==NULL);
+    for (ii=0; ii<nslices; ii++){
+      obj[i][ii]=calloc(obj_size_y,sizeof(unsigned short)); 
+      err+=(obj[i][ii]==NULL);
+    }
+  }
+  if(err){
+    fprintf(stderr,"ERROR (%s): Memory allocation error in. Aborting.",NAME_CURRENT_COMP);
+    exit(-1);
+  }
 
   int status=0;
   box_size_y = voxel_size*nslices;
