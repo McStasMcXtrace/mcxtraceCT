@@ -85,8 +85,9 @@
 *******************************************************************************/
 
 DEFINE COMPONENT Phantom_sample3D
-DEFINITION PARAMETERS (string object_file = 0)
-SETTING PARAMETERS (nslices = 100, voxel_size = 1e-3, step_length = 3e-4, phabs_switch=1, compton_switch=0, rayleigh_switch=0, pairprod_switch=0, scattering_order = 3)
+DEFINITION PARAMETERS ()
+SETTING PARAMETERS (string object_file="", nslices = 100, voxel_size = 1e-3, step_length = 3e-4,
+    phabs_switch=1, compton_switch=0, rayleigh_switch=0, pairprod_switch=0, scattering_order = 3)
 OUTPUT PARAMETERS ()
 /* X-ray parameters: (x,y,z,kx,ky,kz,phi,t,Ex,Ey,Ez,p) */
 
@@ -96,30 +97,29 @@ SHARE
 #define MAX_PHANTOM_SIZE_X 800
 #define MAX_PHANTOM_SIZE_Y 258
 #define MAX_PHANTOM_SIZE_Z 800
-
+#define MAX_MATERIALS 200// 200 is the maximum number of distinct materials (should be defined later when database is ready)
 %}
 
 DECLARE
 %{
   t_Table Obj_table; // table where the object_file is stored
-  struct{
-    double rho;
-    double Z; // material properties
-    int filled; // to check if material was encountered later
-    t_Table att_table; // cross sections table
-    t_Table coh_table; // coherent scattering intensity
-    t_Table inc_table; //incoherent scattering intensity
-  } prms[200]; // 200 is the maximum number of distinct materials (should be defined later when database is ready)
+  double rho[MAX_MATERIALS];
+  double Z[MAX_MATERIALS]; // material properties
+  int filled[MAX_MATERIALS]; // to check if material was encountered later
+  t_Table att_table[MAX_MATERIALS]; // cross sections table
+  t_Table coh_table[MAX_MATERIALS]; // coherent scattering intensity
+  t_Table inc_table[MAX_MATERIALS]; //incoherent scattering intensity
+
   double box_size_x; // phantom box sizes (mm)
   double box_size_y;
   double box_size_z;
   unsigned int obj_size_x; // phantom slice size (1)
   unsigned int obj_size_z;
-  int obj[MAX_PHANTOM_SIZE_X][MAX_PHANTOM_SIZE_Y][MAX_PHANTOM_SIZE_Z]; maximum phantom size
-  int compton_flag;
+  int obj[MAX_PHANTOM_SIZE_X][MAX_PHANTOM_SIZE_Y][MAX_PHANTOM_SIZE_Z]; //maximum phantom size
+  int compton_flag; // event type flags
   int rayleigh_flag;
   int single_flag;
-  int multiple_flag; // event type flags
+  int multiple_flag;
 %}
 
 INITIALIZE
@@ -150,7 +150,7 @@ INITIALIZE
     for(i=0;i<obj_size_x;i++){
       for(j=0;j<obj_size_z;j++){
         obj[i][ii][j] = Table_Index(Obj_table,i,j);
-        prms[obj[i][ii][j]].filled=0;
+        filled[obj[i][ii][j]]=0;
       }
     }
   }
@@ -162,40 +162,40 @@ INITIALIZE
       for(j=0;j<obj_size_z;j++){
         if(obj[i][ii][j]){ // Only when it's not zero (air)
           //printf("i j ii (%d, %d, %d) obj = %g\n",i,j,ii,obj[i][ii][j]);
-          if(prms[obj[i][ii][j]].filled==0){ // Only if that material wasn't loaded before
-            prms[obj[i][ii][j]].filled = 1;
+          if(filled[obj[i][ii][j]]==0){ // Only if that material wasn't loaded before
+            filled[obj[i][ii][j]] = 1;
             /* loading absorption and scattering cross section look-up tables */
             snprintf(mat_fn,512,"%d.dat",obj[i][ii][j]);
-            if((status=Table_Read(&(prms[obj[i][ii][j]].att_table),mat_fn,0))==-1){ // load the crossection into prms[i].table
+            if((status=Table_Read(&(att_table[obj[i][ii][j]]),mat_fn,0))==-1){ // load the crossection into prms[i].table
               fprintf(stderr,"ERROR (%s): Could not parse file \"%s\".\n",NAME_CURRENT_COMP,mat_fn); exit(-1);
             }
             // load scattering CDF look-up tables
             if(rayleigh_switch){
               char coh_fn[512] = {0};
               snprintf(coh_fn,512,"%d_coh.dat",obj[i][ii][j]);
-              if((status=Table_Read(&(prms[obj[i][ii][j]].coh_table),coh_fn,0))==-1){ // load the scattering CDF into prms[i].table
+              if((status=Table_Read(&(coh_table[obj[i][ii][j]]),coh_fn,0))==-1){ // load the scattering CDF into prms[i].table
                 fprintf(stderr,"ERROR (%s): Could not parse file \"%s\".\n",NAME_CURRENT_COMP,coh_fn); exit(-1);
               }
             }
             if(compton_switch){
               char inc_fn[512] = {0};
               snprintf(inc_fn,512,"%d_inc.dat",obj[i][ii][j]);
-              if((status=Table_Read(&(prms[obj[i][ii][j]].inc_table),inc_fn,0))==-1){ // load the scattering CDF into prms[i].table
+              if((status=Table_Read(&(inc_table[obj[i][ii][j]]),inc_fn,0))==-1){ // load the scattering CDF into prms[i].table
                 fprintf(stderr,"ERROR (%s): Could not parse file \"%s\".\n",NAME_CURRENT_COMP,inc_fn); exit(-1);
               }
             }
             /* checking the header for retrieving density and Z*/
             char **header_parsed;
             //rho
-            header_parsed = Table_ParseHeader(prms[obj[i][ii][j]].att_table.header,"rho",NULL);
-            if(header_parsed[0]){prms[obj[i][ii][j]].rho = strtod(header_parsed[0],NULL);}
-            else{fprintf(stderr,"WARNING (%s): %s not found in header of %s, set to 1\n",NAME_CURRENT_COMP,"rho",mat_fn); prms[obj[i][ii][j]].rho = 1;}
-            printf("Material density rho = %1.3f.\n",prms[obj[i][ii][j]].rho);
+            header_parsed = Table_ParseHeader(att_table[obj[i][ii][j]].header,"rho",NULL);
+            if(header_parsed[0]){rho[obj[i][ii][j]] = strtod(header_parsed[0],NULL);}
+            else{fprintf(stderr,"WARNING (%s): %s not found in header of %s, set to 1\n",NAME_CURRENT_COMP,"rho",mat_fn); rho[obj[i][ii][j]] = 1;}
+            printf("Material density rho = %1.3f.\n",rho[obj[i][ii][j]]);
             //Z
-            header_parsed = Table_ParseHeader(prms[obj[i][ii][j]].att_table.header,"Z",NULL);
-            if(header_parsed[0]){prms[obj[i][ii][j]].Z = strtod(header_parsed[0],NULL);}
-            else{fprintf(stderr,"WARNING (%s): %s not found in header of %s, set to 1\n",NAME_CURRENT_COMP,"Z",mat_fn); prms[obj[i][ii][j]].Z = 1;}
-            printf("Material Z = %1.3f.\n",prms[obj[i][ii][j]].Z);
+            header_parsed = Table_ParseHeader(att_table[obj[i][ii][j]].header,"Z",NULL);
+            if(header_parsed[0]){Z[obj[i][ii][j]] = strtod(header_parsed[0],NULL);}
+            else{fprintf(stderr,"WARNING (%s): %s not found in header of %s, set to 1\n",NAME_CURRENT_COMP,"Z",mat_fn); Z[obj[i][ii][j]] = 1;}
+            printf("Material Z = %1.3f.\n",Z[obj[i][ii][j]]);
           }
         }
       }
@@ -235,8 +235,8 @@ TRACE
           double kfx, kfy, kfz, kf;
           if(scatter_number<scattering_order){ // check first if we have reached maximum scatter order yet
             k=sqrt(kx*kx+ky*ky+kz*kz); E= K2E*k; // length of k
-            double pinc = 1-exp(-prms[obj[i][ii][j]].rho*1e2*step_size*Table_Value(prms[obj[i][ii][j]].att_table,E,2));
-            double pcoh = 1-exp(-prms[obj[i][ii][j]].rho*1e2*step_size*Table_Value(prms[obj[i][ii][j]].att_table,E,1));
+            double pinc = 1-exp(-rho[obj[i][ii][j]]*1e2*step_size*Table_Value(att_table[obj[i][ii][j]],E,2));
+            double pcoh = 1-exp(-rho[obj[i][ii][j]]*1e2*step_size*Table_Value(att_table[obj[i][ii][j]],E,1));
             double ksi = rand01();
             if(ksi<(pinc+pcoh)){
               if(scatter_number==0){// scatter order flag
@@ -264,7 +264,7 @@ TRACE
                   }
                   costheta = 1-(1-t)/(kau*t);
                   double xx=20.6074*kau*sqrt(2*(1-costheta));
-                  double T=(1-((1-t)*((1+2*k)*t-1)/(t*(1+t*t)*k*k)))*(Table_Value(prms[obj[i][ii][j]].inc_table,xx,1)/prms[obj[i][ii][j]].Z);
+                  double T=(1-((1-t)*((1+2*k)*t-1)/(t*(1+t*t)*k*k)))*(Table_Value(inc_table[obj[i][ii][j]],xx,1)/Z[obj[i][ii][j]]);
                   if(psi2<T){accepted=1;}
                 }
                 sintheta = sqrt(1-costheta*costheta);
@@ -286,11 +286,11 @@ TRACE
               if(ksi>pinc && ksi<pinc+pcoh && rayleigh_switch){ // Rayleigh Scattering
                 scatter_number++; SCATTER;// increment scatter number
                 rayleigh_flag = 1; // coh scatter flag
-                double arg = Table_Value(prms[obj[i][ii][j]].coh_table,rand01(),1)/(2*k);
+                double arg = Table_Value(coh_table[obj[i][ii][j]],rand01(),1)/(2*k);
                 int kk=0, kmax = 10;
                 while(arg>1 && kk<kmax){
                   kk++;
-                  arg = Table_Value(prms[obj[i][ii][j]].coh_table,rand01(),1)/(2*k);
+                  arg = Table_Value(coh_table[obj[i][ii][j]],rand01(),1)/(2*k);
                 } //reject bad values
                 if(kk==kmax){arg = 1;phi = 0;	rayleigh_flag=0;}
                 sintheta = sin(asin(arg)); // sample sintheta from tables
@@ -311,10 +311,10 @@ TRACE
             }
           }
         }
-        if(phabs_switch){mu+=prms[obj[i][ii][j]].rho*(Table_Value(prms[obj[i][ii][j]].att_table,E,3));} // add photo-absorption cross section to attenuation
-        if(compton_switch==0){mu+=prms[obj[i][ii][j]].rho*(Table_Value(prms[obj[i][ii][j]].att_table,E,2));} // add compton cross section to attenuation
-        if(rayleigh_switch==0){mu+=prms[obj[i][ii][j]].rho*(Table_Value(prms[obj[i][ii][j]].att_table,E,1));} // add rayleigh cross section to attenuation
-        if(pairprod_switch==0){mu+=prms[obj[i][ii][j]].rho*(Table_Value(prms[obj[i][ii][j]].att_table,E,4)+Table_Value(prms[obj[i][ii][j]].att_table,E,5));} // add rayleigh cross section to attenuation
+        if(phabs_switch){mu+=rho[obj[i][ii][j]]*(Table_Value(att_table[obj[i][ii][j]],E,3));} // add photo-absorption cross section to attenuation
+        if(compton_switch==0){mu+=rho[obj[i][ii][j]]*(Table_Value(att_table[obj[i][ii][j]],E,2));} // add compton cross section to attenuation
+        if(rayleigh_switch==0){mu+=rho[obj[i][ii][j]]*(Table_Value(att_table[obj[i][ii][j]],E,1));} // add rayleigh cross section to attenuation
+        if(pairprod_switch==0){mu+=rho[obj[i][ii][j]]*(Table_Value(att_table[obj[i][ii][j]],E,4)+Table_Value(att_table[obj[i][ii][j]],E,5));} // add rayleigh cross section to attenuation
       }
       PROP_DL(step_size); // X-ray propagates of the step_size
       tot_mul = tot_mul + mu*step_size*1e2; // store the stepped absorption
