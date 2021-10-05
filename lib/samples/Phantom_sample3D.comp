@@ -138,7 +138,7 @@ INITIALIZE
     obj[i]=calloc(nslices,sizeof(unsigned short *));
     err+=(obj[i]==NULL);
     for (ii=0; ii<nslices; ii++){
-      obj[i][ii]=calloc(obj_size_y,sizeof(unsigned short)); 
+      obj[i][ii]=calloc(obj_size_z,sizeof(unsigned short)); 
       err+=(obj[i][ii]==NULL);
     }
   }
