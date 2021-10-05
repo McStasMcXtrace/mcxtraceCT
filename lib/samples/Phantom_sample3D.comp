@@ -207,6 +207,7 @@ TRACE
 %{
   int scatter_number = 0, hit_sample = 0;
   int mat=0;
+  int i, j, ii; // voxel loop indices
   double d0, d1;
   double step_size;
   double mu, tot_mul, E, k;
@@ -230,7 +231,7 @@ TRACE
       if(obj[i][ii][j]!=0){ // checks if voxel is filled with something.
         if(compton_switch || rayleigh_switch){ //scattering enabled
           double sintheta, costheta;
-          double phi, sinphi, cosphi;
+          double psi, sinpsi, cospsi;
           double sign, a, b, sinsin, sincos;
           double kfx, kfy, kfz, kf;
           if(scatter_number<scattering_order){ // check first if we have reached maximum scatter order yet
@@ -268,11 +269,11 @@ TRACE
                   if(psi2<T){accepted=1;}
                 }
                 sintheta = sqrt(1-costheta*costheta);
-                phi = rand01()*2*PI; // azimuthal angle
-                cosphi = cos(phi); sinphi = sin(phi);
+                psi = rand01()*2*PI; // azimuthal angle
+                cospsi = cos(psi); sinpsi = sin(psi);
                 // Spherical rotation
                 kf = 1/k; kx*=kf; ky*=kf; kz*=kf; // now k has length 1
-                sign = copysign(1,kz); a = -1/(1+fabs(kz)); b = kx*ky*a; sincos = sintheta*cosphi; sinsin = sintheta*sinphi;
+                sign = copysign(1,kz); a = -1/(1+fabs(kz)); b = kx*ky*a; sincos = sintheta*cospsi; sinsin = sintheta*sinpsi;
                 kfx = (1+kx*kx*a)*sincos + sign*b*sinsin + kx*costheta;
                 kfy = b*sincos + sign*(1+ky*ky*a)*sinsin + ky*costheta;
                 kfz = -sign*kx*sincos - ky*sinsin + kz*costheta;
@@ -292,14 +293,14 @@ TRACE
                   kk++;
                   arg = Table_Value(coh_table[obj[i][ii][j]],rand01(),1)/(2*k);
                 } //reject bad values
-                if(kk==kmax){arg = 1;phi = 0;	rayleigh_flag=0;}
+                if(kk==kmax){arg = 1;psi = 0;	rayleigh_flag=0;}
                 sintheta = sin(asin(arg)); // sample sintheta from tables
                 costheta = sqrt(1-sintheta*sintheta);
-                phi = rand01()*2*PI; // azimuthal angle
-                cosphi = cos(phi); sinphi = sin(phi);
+                psi = rand01()*2*PI; // azimuthal angle
+                cospsi = cos(psi); sinpsi = sin(psi);
                 // Spherical rotation
                 kf = 1/k; kx*=kf; ky*=kf; kz*=kf; // now k has length 1
-                sign = copysign(1,kz);	a = -1/(1+fabs(kz));	b = kx*ky*a; sincos = sintheta*cosphi; sinsin = sintheta*sinphi;
+                sign = copysign(1,kz);	a = -1/(1+fabs(kz));	b = kx*ky*a; sincos = sintheta*cospsi; sinsin = sintheta*sinpsi;
                 kfx = (1+kx*kx*a)*sincos + sign*b*sinsin + kx*costheta;
                 kfy = b*sincos + sign*(1+ky*ky*a)*sinsin + ky*costheta;
                 kfz = -sign*kx*sincos - ky*sinsin + kz*costheta;
