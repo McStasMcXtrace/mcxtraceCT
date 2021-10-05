@@ -268,20 +268,20 @@ TRACE
                 double a1 = log(1+2*kau);
                 double a2 = (2*kau*(1+kau))/((1+2*kau)*(1+2*kau));
                 double tau_m = 1/(1+2*kau);
-                double t;
                 int accepted=0;
                 while(!accepted){
+                  double tt;
                   double psi1=rand01();
                   double psi2=rand01();
                   if(rand01()<a1/(a1+a2)){
-                    t = pow(tau_m,psi1);
-                  }	else{
-                    t = sqrt(tau_m*tau_m + psi1*(1-tau_m*tau_m));
+                    tt = pow(tau_m,psi1);
+                  } else{
+                    tt = sqrt(tau_m*tau_m + psi1*(1-tau_m*tau_m));
                   }
-                  costheta = 1-(1-t)/(kau*t);
+                  costheta = 1-(1-tt)/(kau*tt);
                   double xx=20.6074*kau*sqrt(2*(1-costheta));
-                  double T=(1-((1-t)*((1+2*k)*t-1)/(t*(1+t*t)*k*k)))*(Table_Value(inc_table[obj[i][ii][j]],xx,1)/Z[obj[i][ii][j]]);
-                  if(psi2<T){accepted=1;}
+                  double TT=(1-((1-tt)*((1+2*k)*tt-1)/(tt*(1+tt*tt)*k*k)))*(Table_Value(inc_table[obj[i][ii][j]],xx,1)/Z[obj[i][ii][j]]);
+                  if(psi2<TT){accepted=1;}
                 }
                 sintheta = sqrt(1-costheta*costheta);
                 psi = rand01()*2*PI; // azimuthal angle
